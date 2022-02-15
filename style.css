@@ -16,19 +16,18 @@
 #board {
 	width: 200px;
 	margin: 10px auto;
-	vertical-align: middle;
 }
 
 .letterGuess {
-	font-size: 30px;
+	font-size: 25px;
 	height: 45px;
 	width: 45px;
 	margin: 2px;
+	padding: 0;
 	color: #4f5c5d;
 	border: 2px solid #7f8c8d;
 	border-radius: 5px;
 	text-align: center;
-	vertical-align: middle;
 }
 
 #keyboard {
@@ -44,7 +43,7 @@
 .letter {
 	background-color: white;
 	display: block;
-	font-size: 18px;
+	font-size: 16px;
 	margin: 2px;
 	padding: 5px 7px;
 	min-width: 32px;
