@@ -1,8 +1,10 @@
-var numGuesses = 8, numLetters = 4, currentGuess = 0, currentLetter = 0;
+var numGuesses = 7, numLetters = 4, currentGuess = 0, currentLetter = 0;
 
 var guessed = false;
 
 let gameBoard = document.getElementById("board");
+
+var streakW, streakL;
 
 var inputs = [];
 
@@ -55,17 +57,28 @@ document.addEventListener("keyup", function(event) {
 });
 
 function loadAttempts() {
-	var attempted = localStorage.getItem(date + "-attempted");
-	if(attempted != null) {
+	// Make sure the streaks cache is initialized.
+	streakW = localStorage.getItem("streakWin");
+	if(streakW === null) {
+		localStorage.setItem("streakWin", "0")
+		streakW = "0";
+	}
+	streakL = localStorage.getItem("streakLose");
+	if(streakL === null) {
+		localStorage.setItem("streakLose", "0")
+		streakL = "0";
+	}
+	var lastDate = localStorage.getItem("lastDate");
+	if(lastDate != null && lastDate === date) {
 		var i = 0;
 		var attemptedGuess = true;
 		while( i < numGuesses && attemptedGuess) {
-			var guess = localStorage.getItem(date + "-" + i);
+			var guess = localStorage.getItem("attempt-" + i);
 			if(guess != null) {
 				for(j = 0; j < numLetters; j ++) {
 					inputs[i][j].value = guess.charAt(j);
 				}
-				analyzeGuess(i);
+				analyzeGuess(i, true);
 				currentGuess ++;
 			} else {
 				attemptedGuess = false;
@@ -91,18 +104,18 @@ function removeLetter() {
 
 function submit() {
 	if (currentLetter >= numLetters && !guessed) {
-		analyzeGuess(currentGuess);
+		analyzeGuess(currentGuess, false);
 		guess = "";
 		for(i = 0; i < numLetters; i ++) guess += inputs[currentGuess][i].value;
-		localStorage.setItem(date + "-attempted", "true");
-		localStorage.setItem(date + "-" + currentGuess, guess)
+		localStorage.setItem("lastDate", date);
+		localStorage.setItem("attempt-" + currentGuess, guess)
         currentGuess ++;
         currentLetter = 0;
     }
 }
 
 
-function analyzeGuess(guess) {
+function analyzeGuess(guess, past) {
 	var numCorrect = 0;
 	var pastGuesses = ""
 	for(i = 0; i < numLetters; i ++) {
@@ -140,12 +153,143 @@ function analyzeGuess(guess) {
 	}
 	if(numCorrect === 4) {
 		guessed = true;
+		
+		if(!past) {
+			streakL = "0";
+			localStorage.setItem("streakLose", "0");
+			
+			var newWinStreak = Number(streakW) + 1;
+			streakW = String(newWinStreak)
+			localStorage.setItem("streakWin", String(streakW));
+		}
 		toggleWinModal();
+		
+	} else if(currentGuess === numGuesses - 1) {
+		guessed = true;
+		
+		if(!past) {
+			streakW = "0";
+			localStorage.setItem("streakWin", "0");
+			
+			var newLoseStreak = Number(streakL) + 1;
+			streakL = String(newLoseStreak)
+			localStorage.setItem("streakLose", String(streakL));
+		}
+		toggleLoseModal();
 	}
+}
+
+var attempts = "";
+
+function shareAttempts() {
+	var shareDate = ( "0" + (d.getMonth()+1) ).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear(); 
+	navigator.clipboard.writeText("#Qwertle " + shareDate + ":\n" + attempts);
 }
  
 function toggleWinModal() {
-	var i =0;
+	document.getElementById("modalHeading").innerHTML = "Congratulations!";
+	document.getElementById('streak').innerHTML = "You have won "  + streakW + " times in a row!";
+	attempts = printAttempts();
+	var attemptArr = attempts.split("\n");
+	var fullAttempt = "";
+	for(var s = 0; s < attemptArr.length; s++) {
+		fullAttempt += attemptArr[s];
+		if(s != attemptArr.length -1) fullAttempt += "<br>";
+	}
+	document.getElementById("attempts").innerHTML = fullAttempt;
+	getTime();
+	toggleModal("end");
+}
+ 
+function toggleLoseModal() {
+	document.getElementById("modalHeading").innerHTML = "Today's Letters: " + word;
+	document.getElementById('streak').innerHTML = "You have lost " + streakL + " times in a row!";
+	attempts = printAttempts();
+	var attemptArr = attempts.split("\n");
+	var fullAttempt = "";
+	for(var s = 0; s < attemptArr.length; s++) {
+		fullAttempt += attemptArr[s];
+		if(s != attemptArr.length -1) fullAttempt += "<br>";
+	}
+	document.getElementById("attempts").innerHTML = fullAttempt;
+	getTime();
+	toggleModal("end");
+}
+
+/**
+	Green Box: 	&#129001;
+	Yellow Box: &#129000;
+	Gray Box:	&#11036;
+	New Line:	&#10;
+ */
+
+function printAttempts() {
+	var ret = [];
+	for(var i = 0; i <=currentGuess; i ++) {
+		temp = []
+		for(var j = 0; j <= numLetters; j++) {
+			if(j === numLetters && i != currentGuess) {
+				temp.push("\n");
+			} else {
+				temp.push("");
+			}
+		}
+		ret.push(temp);
+	}
+	for(var i = 0; i <=currentGuess; i++) {
+		var pastGuesses = "";
+		for(j = 0; j < numLetters; j ++) {
+			if(inputs[i][j].value == word.charAt(j)) {
+				pastGuesses += word.charAt(i)
+				ret[i][j] = "🟩";
+			}
+		}
+		for(j = 0; j < numLetters; j ++) {
+			if(word.includes(inputs[i][j].value) && 
+					!pastGuesses.includes(inputs[i][j].value)) {
+				pastGuesses += inputs[i][j].value;
+				if (ret[i][j] != "🟩") {
+					ret[i][j] = "🟨";
+				}
+			} else {
+				if (ret[i][j] === "") {
+					ret[i][j] = "⬜";
+				}
+			}
+		}
+	}
+	val = "";
+	for(i = 0; i <= currentGuess; i++) {
+		for(j = 0; j <= numLetters; j++) {
+			val += ret[i][j]
+		}
+	}
+	return val;
+	
+}
+
+function getTime() {
+	var x = setInterval(function() {
+	  	// Get today's date and time
+	  	const today = new Date()
+		const tomorrow = new Date(today)
+		tomorrow.setDate(tomorrow.getDate() + 1);
+		tomorrow.setHours(0,0,0,0);
+		
+	  	var now = new Date().getTime();
+	
+	  	// Find the distance between now and the count down date
+	  	var distance = tomorrow - now;
+	
+	  	// Time calculations for days, hours, minutes and seconds
+	  	var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	  	var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	  	var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+	
+	  	// Display the result in the element with id="demo"
+	  	var time = ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+	  	document.getElementById("qwertleTime").innerHTML = time;
+	}, 1000);
 }
  
 function toggleModal(id) {
