@@ -182,8 +182,23 @@ function analyzeGuess(guess, past) {
 var attempts = "";
 
 function shareAttempts() {
-	var shareDate = ( "0" + (d.getMonth()+1) ).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear(); 
-	navigator.clipboard.writeText("#Qwertle " + shareDate + ":\n" + attempts);
+	var shareDate = ( "0" + (d.getMonth()+1) ).slice(-2) + "/" + ("0" + d.getDate()).slice(-2) + "/" + d.getFullYear();
+	var ret =  "#Qwertle " + shareDate + ":\n" + attempts
+	if (navigator.share) {
+  		// Web Share API is supported
+  		navigator.share({
+      		title: 'Qwertle Score',
+      		text: ret,
+      		url: 'https://qwertle.com'
+    	}).then(() => {
+      		console.log('Thanks for sharing!');
+    	})
+    	.catch(console.error);
+	} else {
+  		// Fallback
+  		navigator.clipboard.writeText(ret);
+  		alert("Your score was added to your clipboard!");
+	}
 }
  
 function toggleWinModal() {
