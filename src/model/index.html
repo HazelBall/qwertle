@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <meta name="viewport" content="user-scalable=no">-->
+	<title>Qwertle: Your Worst Nightmare</title>
+	<meta name="description" content="Qwertle is a word guessing game with a twist. Every day, you get 6 chances to guess a 4-letter sequence.">
+	<link rel = "stylesheet" type = "text/css" href = "style.css">
+</head>
+<body onload = "loadAttempts()">
+	<div class = "game">
+		<div class = "header">
+			<h1>QWERTLE</h1>
+			<!-- <h1><span id="letterChange">Q</span>WERTLE</h1> -->
+			<p>Guess 4 Random Letters every day!</p>
+		</div>
+		<div id = "board"></div>
+		<div id = "keyboard">
+			<div>
+				<button id = "Q" class = "letter" onclick = "addLetter('Q')">Q</button>
+				<button id = "W" class = "letter" onclick = "addLetter('W')">W</button>
+				<button id = "E" class = "letter" onclick = "addLetter('E')">E</button>
+				<button id = "R" class = "letter" onclick = "addLetter('R')">R</button>
+				<button id = "T" class = "letter" onclick = "addLetter('T')">T</button>
+				<button id = "Y" class = "letter" onclick = "addLetter('Y')">Y</button>
+				<button id = "U" class = "letter" onclick = "addLetter('U')">U</button>
+				<button id = "I" class = "letter" onclick = "addLetter('I')">I</button>
+				<button id = "O" class = "letter" onclick = "addLetter('O')">O</button>
+				<button id = "P" class = "letter" onclick = "addLetter('P')">P</button>
+			</div>
+			<div>
+				<button id = "A" class = "letter" onclick = "addLetter('A')">A</button>
+				<button id = "S" class = "letter" onclick = "addLetter('S')">S</button>
+				<button id = "D" class = "letter" onclick = "addLetter('D')">D</button>
+				<button id = "F" class = "letter" onclick = "addLetter('F')">F</button>
+				<button id = "G" class = "letter" onclick = "addLetter('G')">G</button>
+				<button id = "H" class = "letter" onclick = "addLetter('H')">H</button>
+				<button id = "J" class = "letter" onclick = "addLetter('J')">J</button>
+				<button id = "K" class = "letter" onclick = "addLetter('K')">K</button>
+				<button id = "L" class = "letter" onclick = "addLetter('L')">L</button>
+			</div>
+			<div>
+				<button id = "Enter" class = "letter" onclick = "submit()">Enter</button>
+				<button id = "Z" class = "letter" onclick = "addLetter('Z')">Z</button>
+				<button id = "X" class = "letter" onclick = "addLetter('X')">X</button>
+				<button id = "C" class = "letter" onclick = "addLetter('C')">C</button>
+				<button id = "V" class = "letter" onclick = "addLetter('V')">V</button>
+				<button id = "B" class = "letter" onclick = "addLetter('B')">B</button>
+				<button id = "N" class = "letter" onclick = "addLetter('N')">N</button>
+				<button id = "M" class = "letter" onclick = "addLetter('M')">M</button>
+				<button id = "Backspace" class = "letter" onclick = "removeLetter()">&#9003;</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- <button onclick="localStorage.clear()">Clear Cache</button> -->
+	
+	<div class = "modal" id = "end">
+		<h2 id = "modalHeading"></h2>
+		<p id = "streak"></p>
+		<p id = "attempts"></p>
+		<a class = "button" onclick = "shareAttempts()">Share</a>
+		<br>
+		<p><b>Next Qwertle in: <span id = "qwertleTime"></span></b></p>
+		<a id = "closeModal" onclick = "toggleModal('end')">&#10005;</a>
+	</div>
+	
+	<p id = "credits">Made by Hunter Ball</p>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js"></script>
+	<script src = "script.js"></script>
+</body>
+</html>
