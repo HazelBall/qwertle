@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, KeyboardEvent } from "react";
 import "./App.css";
 
 import { BoardView, GameState } from "./Board";
 
 function App() {
-	const [count, setCount] = useState(0);
-
 	const [currentGuess, setCurrentGuess] = useState("");
 
-	const addLetter = (letter: string) => {
-		if (!currentGuess.includes(letter)) return false;
-		setCurrentGuess(currentGuess + letter);
+	const log = (e: KeyboardEvent): void => {
+		console.log(e.key);
 	};
 
-	const removeLetter = () => {};
-
-	return <div className="App"></div>;
+	return (
+		<div className="App" onKeyUp={(e) => log(e)} tabIndex={-1} autoFocus>
+			<h1>QWERTLE</h1>
+			<h2>Your Worst Nightmare</h2>
+			<BoardView
+				word={"quiz"}
+				finishGame={(state: GameState): void => {
+					console.log("Game Finished!" + state);
+				}}
+			/>
+		</div>
+	);
 }
 
 export default App;

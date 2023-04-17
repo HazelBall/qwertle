@@ -52,7 +52,13 @@ class Board {
 		this.attempts = new Array<string>(this.numAttempts);
 	}
 
-	getLetterType = (letter: string, index: number): LETTER_TYPES => {
+	/**
+	 * Checks whether a given letter is present in the word, in the correct spot, or neither.
+	 * @param letter 1 character string representing the letter given by the user.
+	 * @param index 0-based index that the letter was placed.
+	 * @returns LETTER_TYPES enum evaluation
+	 */
+	checkLetter = (letter: string, index: number): LETTER_TYPES => {
 		if (this.word[index] === letter) return LETTER_TYPES.CORRECT;
 		if (this.word.includes(letter)) return LETTER_TYPES.EXISTS;
 		return LETTER_TYPES.INCORRECT;
