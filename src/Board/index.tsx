@@ -25,17 +25,20 @@ const BoardView = (props: {
 			setBoard(new Board(configs));
 		}
 		document.addEventListener("keyup", logLetter, true);
+
+		return () => {
+			document.removeEventListener("keyup", logLetter);
+		};
 	}, []);
 
 	const logLetter = (e: KeyboardEvent) => {
-		addLetter(e.key);
+		console.log(currentGuess);
+		if ("abcdefghijklmnopqrstuvwxyz".includes(e.key)) addLetter(e.key);
+		else if (e.key === "Backspace") removeLetter();
 	};
 
 	const addLetter = (letter: string) => {
-		if (
-			"abcdefghijklmnopqrstuvwxyz".includes(letter) &&
-			!currentGuess.includes(letter)
-		) {
+		if (!currentGuess.includes(letter)) {
 			setCurrentGuess((prevState) => prevState + letter);
 		}
 	};
