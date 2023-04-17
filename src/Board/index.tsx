@@ -24,11 +24,20 @@ const BoardView = (props: {
 			);
 			setBoard(new Board(configs));
 		}
+		document.addEventListener("keyup", logLetter, true);
 	}, []);
 
+	const logLetter = (e: KeyboardEvent) => {
+		addLetter(e.key);
+	};
+
 	const addLetter = (letter: string) => {
-		if (!currentGuess.includes(letter)) return false;
-		setCurrentGuess(currentGuess + letter);
+		if (
+			"abcdefghijklmnopqrstuvwxyz".includes(letter) &&
+			!currentGuess.includes(letter)
+		) {
+			setCurrentGuess((prevState) => prevState + letter);
+		}
 	};
 
 	const removeLetter = () => {
