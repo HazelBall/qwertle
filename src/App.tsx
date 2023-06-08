@@ -1,6 +1,6 @@
 import React, { useState, useEffect, KeyboardEvent } from "react";
 import "./App.css";
-import Keyboard from "./Components/keyboard";
+import Keyboard from "./Components/Keyboard";
 
 function App() {
 	return (
