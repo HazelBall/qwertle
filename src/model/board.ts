@@ -1,12 +1,10 @@
-enum LETTER_TYPES {
-	INCORRECT,
-	EXISTS,
-	CORRECT,
-}
+import { Letter, LETTER_STATUS } from "./letter";
+import { LETTER_MAPS } from "./lettermaps";
 
 const DEFAULT_WORD = "wasd";
 const DEFAULT_ATTEMPTS = 7;
 const DEFAULT_WORD_LENGTH = 4;
+const DEFAULT_KEYBOARD_LAYOUT = LETTER_MAPS.QWERTY;
 
 /**
  * QWERTLE configurations, including number of guesses allowed,
@@ -16,16 +14,23 @@ const DEFAULT_WORD_LENGTH = 4;
 class BoardConfigs {
 	word: string;
 	wordLength: number;
-	attempts: number;
+	allowedAttempts: number;
+	keyboardLayout: { layout: string[][]; map: {} };
 
+	// for testing purposes, default configurations exist if no parameters are given
 	constructor(
 		word: string = DEFAULT_WORD,
 		wordLength: number = DEFAULT_WORD_LENGTH,
-		allowedAttempts: number = DEFAULT_ATTEMPTS
+		allowedAttempts: number = DEFAULT_ATTEMPTS,
+		keyboardLayout: {
+			layout: string[][];
+			map: {};
+		} = DEFAULT_KEYBOARD_LAYOUT
 	) {
 		this.word = word;
 		this.wordLength = wordLength;
-		this.attempts = allowedAttempts;
+		this.allowedAttempts = allowedAttempts;
+		this.keyboardLayout = keyboardLayout;
 	}
 }
 
@@ -34,44 +39,33 @@ class BoardConfigs {
  * configurations, and validations for letters and guesses.
  */
 class Board {
+	configs: BoardConfigs;
 	currentAttempt: number;
-	word: string;
-	wordLength: number;
-	numAttempts: number;
 	attempts: string[];
 
 	/**
 	 * Creates a new Board with
 	 * @param {*} word
 	 */
-	constructor(configs: BoardConfigs) {
+	constructor(configs: BoardConfigs, attempts: Letter[][]) {
+		this.configs = configs;
 		this.currentAttempt = 0;
-		this.word = configs.word;
-		this.wordLength = configs.wordLength;
-		this.numAttempts = configs.attempts;
-		this.attempts = new Array<string>(this.numAttempts);
+		this.attempts = new Array<string>(this.configs.allowedAttempts);
 	}
 
 	/**
 	 * Checks whether a given letter is present in the word, in the correct spot, or neither.
 	 * @param letter 1 character string representing the letter given by the user.
 	 * @param index 0-based index that the letter was placed.
-	 * @returns LETTER_TYPES enum evaluation
+	 * @returns LETTER_STATUS enum evaluation
 	 */
-	checkLetter = (letter: string, index: number): LETTER_TYPES => {
-		if (this.word[index] === letter) return LETTER_TYPES.CORRECT;
-		if (this.word.includes(letter)) return LETTER_TYPES.EXISTS;
-		return LETTER_TYPES.INCORRECT;
+	checkLetter = (letter: string, index: number): LETTER_STATUS => {
+		if (this.configs.word[index] === letter) return LETTER_STATUS.CORRECT;
+		if (this.configs.word.includes(letter)) return LETTER_STATUS.MISPLACED;
+		return LETTER_STATUS.INCORRECT;
 	};
 
-	/**
-	 * Attempts the letters submitted by the user
-	 * @param {*} attempt 4 letter word after the user hits enter
-	 */
-	addAttempt = (attempt: string) => {
-		this.attempts[this.currentAttempt] = attempt;
-		return false;
-	};
+	addLetter: (letter: string) => Board | void = (letter: string) => {};
 }
 
-export { Board, BoardConfigs, LETTER_TYPES };
+export { Board, BoardConfigs, LETTER_STATUS };

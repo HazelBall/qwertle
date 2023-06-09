@@ -1,33 +1,32 @@
 import React from "react";
-import { Letter, LetterStatus } from "./Letter";
+import { Letter } from "./Letter";
+import { LETTER_STATUS, KEYBOARD_SPACER } from "../model/letter";
+import { LETTER_MAPS } from "../model/lettermaps";
 
-const Keyboard = () => {
+const Keyboard = (props: { addLetter: (letter: string) => void }) => {
 	/* ADD THIS ONCE FUNCTIONING
     props: {
 	onKeyPress: (letter: string) => void;
 	keyStates: { key: string; state: {} };
     }
     */
-	const keyboard = [
-		["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-		["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-		["z", "x", "c", "v", "b", "n", "m", "spacer"],
-	];
+	const keyboard = LETTER_MAPS.QWERTY.layout;
 	return (
 		<div>
 			{keyboard.map((keyboardRow, i) => (
 				<div key={keyboardRow.join()} className="keyboard-row">
-					{keyboardRow.map((key) =>
-						key !== "spacer" ? (
+					{keyboardRow.map((key, i) =>
+						key !== KEYBOARD_SPACER ? (
 							<Letter
 								key={"letter" + key}
 								letter={key}
 								isDisabled={false}
-								status={LetterStatus.Correct}
+								status={LETTER_STATUS.CORRECT}
+								addLetter={props.addLetter}
 							/>
 						) : (
 							<span
-								className="keyboard-spacer"
+								className={"keyboard-spacer-" + i}
 								style={{ padding: "10px" }}
 								key={key}
 							></span>
