@@ -12,7 +12,7 @@ const Keyboard = (props: { addLetter: (letter: string) => void }) => {
     */
 	const keyboard = LETTER_MAPS.QWERTY.layout;
 	return (
-		<div>
+		<div className="keyboard">
 			{keyboard.map((keyboardRow, i) => (
 				<div key={keyboardRow.join()} className="keyboard-row">
 					{keyboardRow.map((key, i) =>
@@ -26,9 +26,9 @@ const Keyboard = (props: { addLetter: (letter: string) => void }) => {
 							/>
 						) : (
 							<span
-								className={"keyboard-spacer-" + i}
+								className={"keyboard-spacer"}
 								style={{ padding: "10px" }}
-								key={key}
+								key={key + "" + i}
 							></span>
 						)
 					)}

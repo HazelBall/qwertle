@@ -41,6 +41,7 @@ class BoardConfigs {
 class Board {
 	configs: BoardConfigs;
 	currentAttempt: number;
+	currentLetter: number;
 	attempts: string[];
 
 	/**
@@ -49,7 +50,7 @@ class Board {
 	 */
 	constructor(configs: BoardConfigs, attempts: Letter[][]) {
 		this.configs = configs;
-		this.currentAttempt = 0;
+		(this.currentAttempt = 0), (this.currentLetter = 0);
 		this.attempts = new Array<string>(this.configs.allowedAttempts);
 	}
 
