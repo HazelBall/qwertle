@@ -6,6 +6,12 @@ enum LETTER_STATUS {
 }
 const KEYBOARD_SPACER = "_";
 
+/**
+ * Class representing a letter, either on the keyboard or guessed by the user. It contains information about
+ * the actual letter, whether it's valid to play next, and the status of the letter.
+ *
+ * When used by the keyboard, the letters display their highest
+ */
 class Letter {
 	letter: string;
 	isValidLetter: boolean;
