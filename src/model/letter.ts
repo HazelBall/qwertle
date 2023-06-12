@@ -15,16 +15,19 @@ const KEYBOARD_SPACER = "_";
 class Letter {
 	letter: string;
 	isValidLetter: boolean;
+	isSelected: boolean;
 	status: LETTER_STATUS;
 
 	constructor(
 		letter: string,
 		isValidLetter: boolean = false,
-		status: LETTER_STATUS = LETTER_STATUS.DEFAULT
+		status: LETTER_STATUS = LETTER_STATUS.DEFAULT,
+		isSelected: boolean = false
 	) {
 		this.letter = letter;
 		this.isValidLetter = isValidLetter;
 		this.status = status;
+		this.isSelected = isSelected;
 	}
 
 	/**
@@ -46,6 +49,17 @@ class Letter {
 			? this
 			: new Letter(this.letter, isValidLetter, this.status);
 	};
+
+	updateSelection(isSelected: boolean) {
+		return this.isSelected === isSelected
+			? this
+			: new Letter(
+					this.letter,
+					this.isValidLetter,
+					this.status,
+					this.isSelected
+			  );
+	}
 }
 
 export { Letter, LETTER_STATUS, KEYBOARD_SPACER };

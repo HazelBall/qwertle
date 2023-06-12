@@ -15,7 +15,7 @@ class BoardConfigs {
 	word: string;
 	wordLength: number;
 	allowedAttempts: number;
-	keyboardLayout: { layout: string[][]; map: {} };
+	keyboardLayout: { layout: string[][]; map: Map<string, string[]> };
 
 	// for testing purposes, default configurations exist if no parameters are given
 	constructor(
@@ -24,7 +24,7 @@ class BoardConfigs {
 		allowedAttempts: number = DEFAULT_ATTEMPTS,
 		keyboardLayout: {
 			layout: string[][];
-			map: {};
+			map: Map<string, string[]>;
 		} = DEFAULT_KEYBOARD_LAYOUT
 	) {
 		this.word = word;
@@ -43,6 +43,7 @@ class Board {
 	currentAttempt: number;
 	currentLetter: number;
 	attempts: (Letter | null)[][];
+	keyboard: Letter[][];
 
 	/**
 	 * Create a new board object with the given configurations,
@@ -62,7 +63,8 @@ class Board {
 		configs: BoardConfigs,
 		currentAttempt: number = 0,
 		currentLetter: number = 0,
-		attempts: (Letter | null)[][] | null = null
+		attempts: (Letter | null)[][] | null = null,
+		keyboard: null | Letter[][] = null
 	) {
 		this.configs = configs;
 		this.currentAttempt = currentAttempt;
@@ -81,6 +83,24 @@ class Board {
 					row.push(null);
 				}
 				this.attempts.push(row);
+			}
+		}
+
+		if (keyboard !== null) {
+			this.keyboard = keyboard;
+		} else {
+			this.keyboard = [];
+			let layout = this.configs.keyboardLayout.layout;
+			for (let i = 0; i < layout.length; i++) {
+				let row: Letter[] = [];
+				for (
+					let j = 0;
+					j < this.configs.keyboardLayout.layout[i].length;
+					j++
+				) {
+					row.push(new Letter(layout[i][j]));
+				}
+				this.keyboard.push(row);
 			}
 		}
 	}
@@ -118,6 +138,22 @@ class Board {
 								? new Letter(newLetter)
 								: letter;
 					  });
+			}),
+			// Select the letter on the keyboard and disable any letters not already selected
+			this.keyboard.map((row: Letter[]) => {
+				return row.map((letter) => {
+					if (letter.letter === newLetter)
+						return letter
+							.updateSelection(true)
+							.updateValidity(false);
+					if (
+						!this.configs.keyboardLayout.map
+							.get(letter.letter)
+							?.includes(newLetter)
+					)
+						return letter.updateValidity(false);
+					return letter;
+				});
 			})
 		);
 	};
@@ -127,7 +163,10 @@ class Board {
 	 * @returns new Board object
 	 */
 	removeLetter = () => {
-		if (this.currentLetter == 0) return this;
+		if (this.currentLetter <= 0) return this;
+		let lastLetter = this.attempts[this.currentAttempt][this.currentLetter];
+		let prevLetter =
+			this.attempts[this.currentAttempt][this.currentLetter - 1];
 		return new Board(
 			this.configs,
 			this.currentAttempt,
@@ -140,6 +179,27 @@ class Board {
 								? null
 								: letter;
 					  });
+			}),
+
+			// Update which letters can be guessed next
+			this.keyboard.map((row) => {
+				return row.map((letter) => {
+					if (
+						lastLetter !== null &&
+						letter.letter === lastLetter.letter
+					)
+						return letter
+							.updateSelection(false)
+							.updateValidity(true);
+					if (
+						prevLetter !== null &&
+						this.configs.keyboardLayout.map
+							.get(letter.letter)
+							?.includes(prevLetter.letter)
+					)
+						return letter.updateValidity(true);
+					return letter.updateValidity(false);
+				});
 			})
 		);
 	};
@@ -160,12 +220,17 @@ class Board {
 					: row.map((letter) => {
 							return null;
 					  });
+			}),
+			this.keyboard.map((row) => {
+				return row.map((letter) => {
+					return letter.updateValidity(true).updateSelection(false);
+				});
 			})
 		);
 	};
 
 	/**
-	 * Returns a new board object with the current guess submitted, checking the status of each guess
+	 * Returns a new board object with the current guess submitted, checking the status of each guess for the keyboard and game board
 	 * @returns
 	 */
 	submitGuess = () => {
@@ -184,6 +249,38 @@ class Board {
 								this.checkLetter(letter, letterIndex)
 							);
 					  });
+			}),
+			this.keyboard.map((row) => {
+				return row.map((letter) => {
+					// All letters should be valid and unselected next guess.
+					let newLetter = letter
+						.updateValidity(true)
+						.updateSelection(false);
+
+					// If the letter wasn't part of the last guess, then great job, we don't need to do anything else!
+					if (!letter.isSelected) return newLetter;
+
+					/*
+						If the current keyboard letter is selected, we need to find the letter within the last guess in order 
+						to compare the statuses of the keyboard and attempt letter, and keep the highest ranking one.
+					*/
+					let matchingLetter: Letter | null = null;
+					let currentAttemptRow: (Letter | null)[] =
+						this.attempts[this.currentAttempt];
+
+					for (let attemptLetter of currentAttemptRow)
+						if (
+							attemptLetter &&
+							attemptLetter.letter === letter.letter
+						)
+							matchingLetter = attemptLetter;
+
+					return matchingLetter
+						? newLetter.updateStatus(
+								Math.max(letter.status, matchingLetter.status)
+						  )
+						: newLetter;
+				});
 			})
 		);
 	};
