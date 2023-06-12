@@ -2,26 +2,30 @@ import React from "react";
 import { Letter } from "./Letter";
 import { LETTER_STATUS, KEYBOARD_SPACER } from "../model/letter";
 import { LETTER_MAPS } from "../model/lettermaps";
+import { Board } from "../model/board";
 
-const Keyboard = (props: { addLetter: (letter: string) => void }) => {
+const Keyboard = (props: {
+	board: Board;
+	addLetter: (letter: string) => void;
+}) => {
 	/* ADD THIS ONCE FUNCTIONING
     props: {
 	onKeyPress: (letter: string) => void;
 	keyStates: { key: string; state: {} };
     }
     */
-	const keyboard = LETTER_MAPS.QWERTY.layout;
+	const keyboard = props.board.keyboard;
 	return (
 		<div className="keyboard">
 			{keyboard.map((keyboardRow, i) => (
 				<div key={keyboardRow.join()} className="keyboard-row">
 					{keyboardRow.map((key, i) =>
-						key !== KEYBOARD_SPACER ? (
+						key.letter !== KEYBOARD_SPACER ? (
 							<Letter
-								key={"letter" + key}
-								letter={key}
-								isDisabled={false}
-								status={LETTER_STATUS.CORRECT}
+								key={"letter" + key.letter}
+								letter={key.letter}
+								isDisabled={key.isValidLetter}
+								status={key.status}
 								addLetter={props.addLetter}
 							/>
 						) : (

@@ -125,6 +125,7 @@ class Board {
 	 * @returns new Board object
 	 */
 	addLetter = (newLetter: string) => {
+		console.log("Trying to Add Letter...");
 		if (this.currentLetter >= this.configs.wordLength) return this;
 		return new Board(
 			this.configs,
