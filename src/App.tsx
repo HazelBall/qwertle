@@ -28,8 +28,37 @@ function App() {
 		<div className="App">
 			<h1>QWERTLE</h1>
 			<h2>Your Worst Nightmare</h2>
-			<h3>{guess}</h3>
+			{board.attempts.map((row, i) => {
+				return (
+					<div className="game-row" key={i}>
+						{row.map((letter, j) => {
+							return (
+								<span
+									key={"guess-" + j}
+									className="guess-letter"
+								>
+									{letter ? letter.letter : " "}
+								</span>
+							);
+						})}
+					</div>
+				);
+			})}
+			<h3>{"Current Guess: " + guess}</h3>
 			<Keyboard board={board} addLetter={handleAddLetter} />
+			{/*
+			<input
+				type="button"
+				value="⌫"
+				onClick={() => {
+					dispatch({
+						type: BOARD_ACTIONS.DELETE_LETTER,
+						payload: {},
+					});
+				}}
+			/>
+			<input type="button" value="Enter" />
+			*/}
 		</div>
 	);
 }
