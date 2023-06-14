@@ -20,7 +20,8 @@ function App() {
 			type: BOARD_ACTIONS.ADD_LETTER,
 			payload: { letter: letter },
 		});
-		setGuess(guess + letter);
+		if (board.currentLetter < board.configs.wordLength)
+			setGuess(guess + letter);
 	};
 
 	return (

@@ -23,6 +23,10 @@ const boardReducer = (
 				throw new Error(
 					"Error with ADD_LETTER: No letter given by payload)"
 				);
+			let guess = "";
+			for (let l of board.attempts[board.currentAttempt])
+				guess += l ? l.letter : "";
+			console.log(guess);
 			return board.addLetter(action.payload.letter);
 		}
 		case BOARD_ACTIONS.DELETE_LETTER: {

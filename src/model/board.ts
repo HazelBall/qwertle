@@ -143,17 +143,26 @@ class Board {
 			// Select the letter on the keyboard and disable any letters not already selected
 			this.keyboard.map((row: Letter[]) => {
 				return row.map((letter) => {
-					if (letter.letter === newLetter)
-						return letter
-							.updateSelection(true)
-							.updateValidity(false);
+					let sameLetter = letter.letter === newLetter;
+					let wordFinished =
+						this.currentLetter + 1 >= this.configs.wordLength;
+					let isAdjacentLetter = this.configs.keyboardLayout.map
+						.get(letter.letter)
+						?.includes(newLetter);
+					if (sameLetter)
+						return new Letter(
+							letter.letter,
+							false,
+							letter.status,
+							true
+						);
 					if (
-						!this.configs.keyboardLayout.map
-							.get(letter.letter)
-							?.includes(newLetter)
+						wordFinished ||
+						!isAdjacentLetter ||
+						(isAdjacentLetter && letter.isSelected)
 					)
 						return letter.updateValidity(false);
-					return letter;
+					return letter.updateValidity(true);
 				});
 			})
 		);

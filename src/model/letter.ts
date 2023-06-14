@@ -20,7 +20,7 @@ class Letter {
 
 	constructor(
 		letter: string,
-		isValidLetter: boolean = false,
+		isValidLetter: boolean = true,
 		status: LETTER_STATUS = LETTER_STATUS.DEFAULT,
 		isSelected: boolean = false
 	) {
@@ -36,7 +36,12 @@ class Letter {
 	 * @returns new Letter object copied from the current, with the new status.
 	 */
 	updateStatus = (status: LETTER_STATUS) => {
-		return new Letter(this.letter, this.isValidLetter, status);
+		return new Letter(
+			this.letter,
+			this.isValidLetter,
+			status,
+			this.isSelected
+		);
 	};
 
 	/**
@@ -47,18 +52,22 @@ class Letter {
 	updateValidity = (isValidLetter: boolean) => {
 		return isValidLetter === this.isValidLetter
 			? this
-			: new Letter(this.letter, isValidLetter, this.status);
-	};
-
-	updateSelection(isSelected: boolean) {
-		return this.isSelected === isSelected
-			? this
 			: new Letter(
 					this.letter,
-					this.isValidLetter,
+					isValidLetter,
 					this.status,
 					this.isSelected
 			  );
+	};
+
+	updateSelection(isSelected: boolean) {
+		console.log("Updating selection for letter " + this.letter);
+		return new Letter(
+			this.letter,
+			this.isValidLetter,
+			this.status,
+			isSelected
+		);
 	}
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Letter } from "./Letter";
+import { Key } from "./Key";
 import { LETTER_STATUS, KEYBOARD_SPACER } from "../model/letter";
 import { LETTER_MAPS } from "../model/lettermaps";
 import { Board } from "../model/board";
@@ -21,11 +21,9 @@ const Keyboard = (props: {
 				<div key={keyboardRow.join()} className="keyboard-row">
 					{keyboardRow.map((key, i) =>
 						key.letter !== KEYBOARD_SPACER ? (
-							<Letter
+							<Key
 								key={"letter" + key.letter}
-								letter={key.letter}
-								isDisabled={key.isValidLetter}
-								status={key.status}
+								letter={key}
 								addLetter={props.addLetter}
 							/>
 						) : (

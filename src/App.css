@@ -34,3 +34,8 @@
 .keyboard-letter.correct:hover {
   background-color: rgb(74, 121, 74);
 }
+
+.keyboard-letter.selected {
+  background-color: white;
+  color: black;
+}
