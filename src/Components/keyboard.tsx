@@ -1,6 +1,6 @@
 import React from "react";
 import { Key } from "./Key";
-import { LETTER_STATUS, KEYBOARD_SPACER } from "../model/letter";
+import { LETTER_STATUS, KEYBOARD_SPACER, Letter } from "../model/letter";
 import { LETTER_MAPS } from "../model/lettermaps";
 import { Board } from "../model/board";
 
@@ -17,6 +17,7 @@ const Keyboard = (props: {
 	const keyboard = props.board.keyboard;
 	return (
 		<div className="keyboard">
+			{keyboard.forEach((value: Letter, key: String) => {})}
 			{keyboard.map((keyboardRow, i) => (
 				<div key={keyboardRow.join()} className="keyboard-row">
 					{keyboardRow.map((key, i) =>
