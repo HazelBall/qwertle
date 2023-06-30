@@ -46,7 +46,7 @@ function App() {
 			})}
 			<h3>{"Current Guess: " + guess}</h3>
 			<Keyboard board={board} addLetter={handleAddLetter} />
-			{/*
+
 			<input
 				type="button"
 				value="⌫"
@@ -57,6 +57,7 @@ function App() {
 					});
 				}}
 			/>
+			{/*
 			<input type="button" value="Enter" />
 			*/}
 		</div>
