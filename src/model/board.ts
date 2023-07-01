@@ -35,8 +35,13 @@ class BoardConfigs {
 }
 
 /**
- * Class containing board information, including previous guesses,
- * configurations, and validations for letters and guesses.
+ * # Board
+ * Represents the data for the current game the user is playing. All state-managed data is stored in this object, including:
+ *  - The correct sequence
+ *  - The user's chosen keyboard layout
+ *  - The attempts the user has made
+ *  - The current attempt the user is making
+ *  - The status of each letter on the keyboard and in submitted attempts
  */
 class Board {
 	configs: BoardConfigs;
@@ -46,27 +51,45 @@ class Board {
 	keyboard: Map<string, Letter>;
 
 	/**
-	 * Create a new board object with the given configurations,
-	 * with optional values if copying from a previous board.
+	 * Board constructor, which takes in optional configurations and board data
+	 * including attempt and letter indices, attempts, and keyboard status.
+	 *
+	 * If no configurations are given, the board uses default test
+	 * configurations. If no board data is given, the board creates new blank
+	 * data, indicating the game has not yet started.
+	 *
+	 * When given data, the board automatically looks for any needed updates to
+	 * statuses, as to simplify state management. For example, the board
+	 * updates the keyboard's validities upon each construction, as to maintain
+	 * them with updates to the attempt data. Additionally, the
+	 *
+	 * @example
+	 *      //Creates a new board with default configurations
+	 *      new Board();
+	 * @example
+	 *      //Creates a new board with specified configurations and no data
+	 *      new Board(configs);
+	 * @example
+	 *      //Creates a new board with specified configurations and data
+	 *      new Board(configs, 0, 2, updatedAttempts, keyboard);
+	 *
 	 * @param configs
-	 * 		BoardConfigs object with the word, word length, max
-	 * 		attempts, and keyboard layout.
-	 * @param currentAttempt
-	 * 		Current guess number (0 if not given)
-	 * @param currentLetter
-	 * 		Current letter (0 if not given)
+	 * 		optional BoardConfigs object for the board, or null if using default configurations.
+	 * @param currentAttemptIndex
+	 * 		index of the current sequence attempt, 0 based.
+	 * @param currentLetterIndex
+	 * 		index of the current sequence letter, 0 based.
 	 * @param attempts
-	 * 		2D array of Letter objects or null, containing the
-	 * 		letter guesses.
+	 * 		2D array of Letter objects or nulls, representing the current board status
 	 * @param keyboard
-	 * 		String to Letter map for the keyboard. The order does not matter because it is given in the board configurations.
+	 * 		map of Letter objects, keyed to the string letter.
 	 */
 	constructor(
-		configs: BoardConfigs,
+		configs: BoardConfigs = new BoardConfigs(),
 		currentAttempt: number = 0,
 		currentLetter: number = 0,
-		attempts: (Letter | null)[][] | null = null,
-		keyboard: null | Map<string, Letter>
+		attempts: null | (Letter | null)[][] = null,
+		keyboard: null | Map<string, Letter> = null
 	) {
 		this.configs = configs;
 		this.currentAttempt = currentAttempt;
@@ -88,15 +111,77 @@ class Board {
 			}
 		}
 
+		this.keyboard = keyboard ? keyboard : new Map<string, Letter>();
 		// Keyboard Validity is calculated on construction so that it will not need to be updated separately in the reducer or Board.
-		this.keyboard = this.setValidity(keyboard);
+		//this.keyboard = this.setValidity(keyboard);
 	}
 
 	/**
-	 * Updates the validity of all keys upon creation of the Board object.
+	 * Updates the status of
+	 * @param attempts
 	 * @param keyboard
 	 * @returns
 	 */
+	updateStatuses = (
+		attempts: Letter[][],
+		keyboard: Map<string, Letter>
+	): { attempts: Letter[][]; keyboard: Map<string, Letter> } | null => {
+		// Only update the statuses after a new attempt has been submitted.
+		if (this.currentLetter !== 0 || this.currentAttempt === 0) {
+			return null;
+		}
+
+		let newAttempts = [...attempts];
+		let newKeyboard = new Map(keyboard);
+		newAttempts.forEach((attempt, attemptIndex) => {
+			// ! Do not update for attempts that have not been completed.
+			if (attemptIndex < this.currentAttempt)
+				attempt.forEach((letter, letterIndex) => {
+					let newStatus = this.checkLetter(letter, letterIndex);
+					letter.updateStatus(newStatus);
+					let keyboardLetter = newKeyboard.get(letter.letter);
+					if (keyboardLetter && newStatus > keyboardLetter.status)
+						keyboardLetter?.updateStatus(newStatus);
+				});
+		});
+		return { attempts: newAttempts, keyboard: newKeyboard };
+	};
+
+	/**
+	 *
+	 * @param keyboard
+	 * @returns
+	 */
+	updateValidity = (keyboard: Map<string, Letter>): Map<string, Letter> => {
+		let newKeyboard = new Map(keyboard);
+		// If no letters have been added to the current guess, all letters are valid
+		if (this.currentLetter == 0) {
+			newKeyboard.forEach((letter, key) => {
+				letter.updateValidity(true);
+			});
+			return newKeyboard;
+		}
+
+		// Update all letters to invalid unless they
+		// - A. are adjacent to the current letter and
+		// - B. aren't selected
+		let lastLetter =
+			this.attempts[this.currentAttempt][this.currentLetter - 1]?.letter;
+		if (!lastLetter)
+			throw new Error(
+				"ERROR updating keyboard validity: last letter is null"
+			);
+		let adjacentLetters = this.configs.keyboardLayout.map.get(lastLetter);
+
+		newKeyboard.forEach((value, key) => {
+			if (adjacentLetters?.includes(key) && !value.isSelected)
+				value.updateValidity(true);
+			else value.updateValidity(false);
+		});
+		return newKeyboard;
+	};
+
+	/*
 	setValidity = (
 		keyboard: Map<string, Letter> | null
 	): Map<string, Letter> => {
@@ -112,10 +197,6 @@ class Board {
 				});
 			});
 		} else {
-			/* 
-				If we are given a keyboard, we must assume every letter is invalid, 
-				then validate letters next to the current letter
-			*/
 			this.configs.keyboardLayout.layout.forEach((row) => {
 				row.forEach((letter) => {
 					let l = keyboard.get(letter);
@@ -156,6 +237,7 @@ class Board {
 		}
 		return keyMap;
 	};
+	*/
 
 	/**
 	 * Checks whether a given letter is present in the word, in the correct spot, or neither.
@@ -186,24 +268,6 @@ class Board {
 		return value instanceof Letter
 			? newKeyboard.set(letter, value.updateSelection(isSelected))
 			: this.keyboard;
-	};
-
-	/**
-	 *
-	 * @param index the updated
-	 * @returns
-	 */
-	updateKeyboardValidity = (index: number): Map<string, Letter> => {
-		let newKeyboard = new Map(this.keyboard);
-		if (index <= 0) {
-			for (let [key, value] of newKeyboard) {
-				newKeyboard.set(key, value.updateValidity(true));
-			}
-			return newKeyboard;
-		}
-
-		// ! TEMP CODE
-		return this.keyboard;
 	};
 
 	/**
@@ -299,41 +363,7 @@ class Board {
 							);
 					  });
 			}),
-			{
-				
-			this.keyboard.map((row) => {
-				return row.map((letter) => {
-					// All letters should be valid and unselected next guess.
-					let newLetter = letter
-						.updateValidity(true)
-						.updateSelection(false);
-
-					// If the letter wasn't part of the last guess, then great job, we don't need to do anything else!
-					if (!letter.isSelected) return newLetter;
-
-					/*
-						If the current keyboard letter is selected, we need to find the letter within the last guess in order 
-						to compare the statuses of the keyboard and attempt letter, and keep the highest ranking one.
-					*/
-					let matchingLetter: Letter | null = null;
-					let currentAttemptRow: (Letter | null)[] =
-						this.attempts[this.currentAttempt];
-
-					for (let attemptLetter of currentAttemptRow)
-						if (
-							attemptLetter &&
-							attemptLetter.letter === letter.letter
-						)
-							matchingLetter = attemptLetter;
-
-					return matchingLetter
-						? newLetter.updateStatus(
-								Math.max(letter.status, matchingLetter.status)
-						  )
-						: newLetter;
-				});
-			})
-		}
+			this.keyboard
 		);
 	};
 }
