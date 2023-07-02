@@ -50,6 +50,7 @@ class Board {
 	attempts: (Letter | null)[][];
 	keyboard: Map<string, Letter>;
 	canSubmit: boolean;
+	isWon: boolean;
 
 	/**
 	 * Board constructor, which takes in optional configurations and board data
@@ -95,6 +96,7 @@ class Board {
 		this.configs = configs;
 		this.currentAttempt = currentAttempt;
 		this.currentLetter = currentLetter;
+		this.isWon = false;
 
 		this.canSubmit = currentLetter >= configs.wordLength;
 
@@ -174,6 +176,12 @@ class Board {
 						);
 				});
 		});
+		let isGameWon = true;
+		newAttempts[this.currentAttempt - 1].forEach((letter) => {
+			if (!letter || letter.status != LETTER_STATUS.CORRECT)
+				isGameWon = false;
+		});
+		this.isWon = isGameWon;
 		return { attempts: newAttempts, keyboard: newKeyboard };
 	};
 
@@ -189,7 +197,9 @@ class Board {
 			newKeyboard.forEach((letter, key) => {
 				newKeyboard.set(
 					key,
-					letter.updateValidity(true).updateSelection(false)
+					this.isWon
+						? letter.updateValidity(false).updateSelection(false)
+						: letter.updateValidity(true).updateSelection(false)
 				);
 			});
 			return newKeyboard;
@@ -323,7 +333,7 @@ class Board {
 	 * @returns new Board object
 	 */
 	addLetter = (newLetter: string) => {
-		if (this.currentLetter >= this.configs.wordLength) return this;
+		if (this.canSubmit) return this;
 		return new Board(
 			this.configs,
 			this.currentAttempt,
