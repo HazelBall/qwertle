@@ -38,6 +38,14 @@
   background-color: rgb(74, 121, 74);
 }
 
+.keyboard-letter.misplaced {
+  background-color: yellow;
+}
+
+.keyboard-letter.incorrect {
+  background-color: rgb(80,80,80);
+}
+
 .keyboard-letter.selected {
   background-color: white;
   color: black;

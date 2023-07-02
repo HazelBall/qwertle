@@ -49,6 +49,7 @@ class Board {
 	currentLetter: number;
 	attempts: (Letter | null)[][];
 	keyboard: Map<string, Letter>;
+	canSubmit: boolean;
 
 	/**
 	 * Board constructor, which takes in optional configurations and board data
@@ -95,6 +96,8 @@ class Board {
 		this.currentAttempt = currentAttempt;
 		this.currentLetter = currentLetter;
 
+		this.canSubmit = currentLetter >= configs.wordLength;
+
 		// Save previous attempts if given, or create a blank board
 		if (attempts !== null) {
 			this.attempts = attempts;
@@ -122,7 +125,10 @@ class Board {
 		// Keyboard Validity is calculated on construction so that it will not need to be updated separately in the reducer or Board.
 		//this.keyboard = this.setValidity(keyboard);
 		let status = this.updateStatuses(this.attempts, this.keyboard);
-		this.attempts = status ? status.attempts : this.attempts;
+		if (status) {
+			this.attempts = status.attempts;
+			this.keyboard = status.keyboard;
+		}
 		this.keyboard = this.updateValidity(this.keyboard);
 	}
 
@@ -144,6 +150,8 @@ class Board {
 			return null;
 		}
 
+		console.log("Updating Statuses!");
+
 		let newAttempts = [...attempts];
 		let newKeyboard = new Map(keyboard);
 		newAttempts.forEach((attempt, attemptIndex) => {
@@ -160,7 +168,10 @@ class Board {
 					letter.updateStatus(newStatus);
 					let keyboardLetter = newKeyboard.get(letter.letter);
 					if (keyboardLetter && newStatus > keyboardLetter.status)
-						keyboardLetter?.updateStatus(newStatus);
+						newKeyboard.set(
+							letter.letter,
+							keyboardLetter.updateStatus(newStatus)
+						);
 				});
 		});
 		return { attempts: newAttempts, keyboard: newKeyboard };
@@ -176,7 +187,10 @@ class Board {
 		// If no letters have been added to the current guess, all letters are valid
 		if (this.currentLetter === 0) {
 			newKeyboard.forEach((letter, key) => {
-				newKeyboard.set(key, letter.updateValidity(true));
+				newKeyboard.set(
+					key,
+					letter.updateValidity(true).updateSelection(false)
+				);
 			});
 			return newKeyboard;
 		}
@@ -186,7 +200,6 @@ class Board {
 		// - B. aren't selected
 		let lastLetter =
 			this.attempts[this.currentAttempt][this.currentLetter - 1]?.letter;
-		console.log("Last Letter: " + lastLetter); // ! CONSOLE
 		if (!lastLetter)
 			throw new Error(
 				"ERROR updating keyboard validity: last letter is null"
@@ -198,8 +211,6 @@ class Board {
 			);
 		}
 		let al: string[] = adjacentLetters;
-		console.log(adjacentLetters); // ! CONSOLE
-		console.log(adjacentLetters.includes("a"));
 
 		newKeyboard.forEach((value, key) => {
 			if (
@@ -312,7 +323,6 @@ class Board {
 	 * @returns new Board object
 	 */
 	addLetter = (newLetter: string) => {
-		console.log("Trying to Add Letter " + newLetter + "...");
 		if (this.currentLetter >= this.configs.wordLength) return this;
 		return new Board(
 			this.configs,

@@ -54,6 +54,17 @@ function App() {
 					});
 				}}
 			/>
+			<input
+				type="button"
+				value="Submit"
+				onClick={() => {
+					dispatch({
+						type: BOARD_ACTIONS.SUBMIT_GUESS,
+						payload: {},
+					});
+				}}
+				disabled={!board.canSubmit}
+			/>
 			{/*
 			<input type="button" value="Enter" />
 			*/}

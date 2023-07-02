@@ -61,7 +61,6 @@ class Letter {
 	};
 
 	updateSelection(isSelected: boolean) {
-		console.log("Updating selection for letter " + this.letter);
 		return new Letter(
 			this.letter,
 			this.isValidLetter,
