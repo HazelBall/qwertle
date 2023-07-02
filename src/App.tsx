@@ -5,23 +5,20 @@ import { BOARD_ACTIONS, boardReducer } from "./reducers/boardReducer";
 import { Board, BoardConfigs } from "./model/board";
 
 function App() {
-	const [guess, setGuess] = useState("");
 	const [board, dispatch] = useReducer(
 		boardReducer,
 		new Board(new BoardConfigs())
 	);
-
-	const addLetter = (letter: string) => {
-		setGuess(guess + letter);
-	};
+	var guess = "";
+	board.attempts[board.currentAttempt].forEach((value) => {
+		guess += value ? value.letter : "";
+	});
 
 	const handleAddLetter = (letter: string) => {
 		dispatch({
 			type: BOARD_ACTIONS.ADD_LETTER,
 			payload: { letter: letter },
 		});
-		if (board.currentLetter < board.configs.wordLength)
-			setGuess(guess + letter);
 	};
 
 	return (

@@ -110,10 +110,20 @@ class Board {
 				this.attempts.push(row);
 			}
 		}
-
-		this.keyboard = keyboard ? keyboard : new Map<string, Letter>();
+		if (keyboard) {
+			this.keyboard = keyboard;
+		} else {
+			let newKeyboard = new Map<string, Letter>();
+			configs.keyboardLayout.map.forEach((value, key) => {
+				newKeyboard.set(key, new Letter(key));
+			});
+			this.keyboard = newKeyboard;
+		}
 		// Keyboard Validity is calculated on construction so that it will not need to be updated separately in the reducer or Board.
 		//this.keyboard = this.setValidity(keyboard);
+		let status = this.updateStatuses(this.attempts, this.keyboard);
+		this.attempts = status ? status.attempts : this.attempts;
+		this.keyboard = this.updateValidity(this.keyboard);
 	}
 
 	/**
@@ -123,9 +133,12 @@ class Board {
 	 * @returns
 	 */
 	updateStatuses = (
-		attempts: Letter[][],
+		attempts: (Letter | null)[][],
 		keyboard: Map<string, Letter>
-	): { attempts: Letter[][]; keyboard: Map<string, Letter> } | null => {
+	): {
+		attempts: (Letter | null)[][];
+		keyboard: Map<string, Letter>;
+	} | null => {
 		// Only update the statuses after a new attempt has been submitted.
 		if (this.currentLetter !== 0 || this.currentAttempt === 0) {
 			return null;
@@ -137,6 +150,12 @@ class Board {
 			// ! Do not update for attempts that have not been completed.
 			if (attemptIndex < this.currentAttempt)
 				attempt.forEach((letter, letterIndex) => {
+					if (!letter)
+						throw new Error(
+							"ERROR Updating Statuses: letter " +
+								letterIndex +
+								"is null"
+						);
 					let newStatus = this.checkLetter(letter, letterIndex);
 					letter.updateStatus(newStatus);
 					let keyboardLetter = newKeyboard.get(letter.letter);
@@ -155,9 +174,9 @@ class Board {
 	updateValidity = (keyboard: Map<string, Letter>): Map<string, Letter> => {
 		let newKeyboard = new Map(keyboard);
 		// If no letters have been added to the current guess, all letters are valid
-		if (this.currentLetter == 0) {
+		if (this.currentLetter === 0) {
 			newKeyboard.forEach((letter, key) => {
-				letter.updateValidity(true);
+				newKeyboard.set(key, letter.updateValidity(true));
 			});
 			return newKeyboard;
 		}
@@ -167,16 +186,31 @@ class Board {
 		// - B. aren't selected
 		let lastLetter =
 			this.attempts[this.currentAttempt][this.currentLetter - 1]?.letter;
+		console.log("Last Letter: " + lastLetter); // ! CONSOLE
 		if (!lastLetter)
 			throw new Error(
 				"ERROR updating keyboard validity: last letter is null"
 			);
 		let adjacentLetters = this.configs.keyboardLayout.map.get(lastLetter);
+		if (!adjacentLetters) {
+			throw new Error(
+				"ERROR updating keyboard validity: no adjacent letters"
+			);
+		}
+		let al: string[] = adjacentLetters;
+		console.log(adjacentLetters); // ! CONSOLE
+		console.log(adjacentLetters.includes("a"));
 
 		newKeyboard.forEach((value, key) => {
-			if (adjacentLetters?.includes(key) && !value.isSelected)
-				value.updateValidity(true);
-			else value.updateValidity(false);
+			if (
+				al.includes(key) &&
+				!value.isSelected &&
+				this.currentLetter < this.configs.wordLength
+			) {
+				newKeyboard.set(key, value.updateValidity(true));
+			} else {
+				newKeyboard.set(key, value.updateValidity(false));
+			}
 		});
 		return newKeyboard;
 	};
@@ -260,9 +294,11 @@ class Board {
 	 * @returns updated keyboard Map
 	 */
 	updateKeyboardSelection = (
-		letter: string,
+		letter: string | undefined,
 		isSelected: boolean
 	): Map<string, Letter> => {
+		if (!letter)
+			throw new Error("ERROR updating keyboard: letter does not exist");
 		let newKeyboard = new Map(this.keyboard);
 		let value = newKeyboard.get(letter);
 		return value instanceof Letter
@@ -276,7 +312,7 @@ class Board {
 	 * @returns new Board object
 	 */
 	addLetter = (newLetter: string) => {
-		console.log("Trying to Add Letter...");
+		console.log("Trying to Add Letter " + newLetter + "...");
 		if (this.currentLetter >= this.configs.wordLength) return this;
 		return new Board(
 			this.configs,
@@ -302,8 +338,9 @@ class Board {
 	removeLetter = () => {
 		if (this.currentLetter <= 0) return this;
 
-		let prevLetter =
+		let deletedLetter =
 			this.attempts[this.currentAttempt][this.currentLetter - 1];
+
 		return new Board(
 			this.configs,
 			this.currentAttempt,
@@ -317,7 +354,7 @@ class Board {
 								: letter;
 					  });
 			}),
-			this.keyboard
+			this.updateKeyboardSelection(deletedLetter?.letter, false)
 		);
 	};
 

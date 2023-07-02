@@ -2,9 +2,10 @@ import React from "react";
 import { LETTER_STATUS, Letter } from "../model/letter";
 
 const Key = (props: {
-	letter: Letter;
+	letter?: Letter;
 	addLetter: (letter: string) => void;
 }) => {
+	if (props.letter === undefined) return <span>Broken</span>;
 	let letter = props.letter;
 	let classes = "keyboard-letter";
 	classes =
@@ -19,7 +20,7 @@ const Key = (props: {
 			type="button"
 			disabled={!props.letter.isValidLetter}
 			value={props.letter.letter}
-			onClick={() => props.addLetter(props.letter.letter)}
+			onClick={() => props.addLetter(letter.letter)}
 		/>
 	);
 };

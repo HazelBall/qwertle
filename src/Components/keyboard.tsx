@@ -14,25 +14,29 @@ const Keyboard = (props: {
 	keyStates: { key: string; state: {} };
     }
     */
+	const keyboardLayout = props.board.configs.keyboardLayout;
 	const keyboard = props.board.keyboard;
+	console.log(keyboard);
+	console.log(props.board.currentLetter);
 	return (
 		<div className="keyboard">
-			{keyboard.forEach((value: Letter, key: String) => {})}
-			{keyboard.map((keyboardRow, i) => (
+			{keyboardLayout.layout.map((keyboardRow, i) => (
 				<div key={keyboardRow.join()} className="keyboard-row">
 					{keyboardRow.map((key, i) =>
-						key.letter !== KEYBOARD_SPACER ? (
-							<Key
-								key={"letter" + key.letter}
-								letter={key}
-								addLetter={props.addLetter}
-							/>
-						) : (
+						key === KEYBOARD_SPACER ? (
 							<span
 								className={"keyboard-spacer"}
 								style={{ padding: "10px" }}
 								key={key + "" + i}
 							></span>
+						) : !keyboard.has(key) ? (
+							<span>Broken</span>
+						) : (
+							<Key
+								key={"letter" + key}
+								letter={keyboard.get(key)}
+								addLetter={props.addLetter}
+							/>
 						)
 					)}
 				</div>
