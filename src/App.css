@@ -31,19 +31,22 @@
   border:none;
 }
 
-.keyboard-letter.correct {
+.keyboard-letter.correct, .guess-letter.correct {
   background-color: rgb(87, 153, 87);
 }
-.keyboard-letter.correct:hover {
-  background-color: rgb(74, 121, 74);
-}
 
-.keyboard-letter.misplaced {
+.keyboard-letter.misplaced, .guess-letter.misplaced {
   background-color: yellow;
 }
 
-.keyboard-letter.incorrect {
-  background-color: rgb(80,80,80);
+.keyboard-letter.incorrect, .guess-letter.incorrect {
+  background-color: red;
+  color: white;
+}
+
+.keyboard-letter:disabled {
+  background-color: rgb(140, 140, 140);
+  color: rgb(200, 200, 200);
 }
 
 .keyboard-letter.selected {

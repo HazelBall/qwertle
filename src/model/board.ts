@@ -152,8 +152,6 @@ class Board {
 			return null;
 		}
 
-		console.log("Updating Statuses!");
-
 		let newAttempts = [...attempts];
 		let newKeyboard = new Map(keyboard);
 		newAttempts.forEach((attempt, attemptIndex) => {

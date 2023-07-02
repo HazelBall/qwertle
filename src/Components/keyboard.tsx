@@ -16,8 +16,6 @@ const Keyboard = (props: {
     */
 	const keyboardLayout = props.board.configs.keyboardLayout;
 	const keyboard = props.board.keyboard;
-	console.log(keyboard);
-	console.log(props.board.currentLetter);
 	return (
 		<div className="keyboard">
 			{keyboardLayout.layout.map((keyboardRow, i) => (
