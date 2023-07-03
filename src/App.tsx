@@ -2,7 +2,7 @@ import React, { useState, useReducer } from "react";
 import "./App.css";
 import Keyboard from "./Components/Keyboard";
 import { BOARD_ACTIONS, boardReducer } from "./reducers/boardReducer";
-import { Board, BoardConfigs } from "./model/board";
+import { Board, BoardConfigs, GAME_STATE } from "./model/board";
 import BoardView from "./Components/BoardView";
 
 function App() {
@@ -10,10 +10,12 @@ function App() {
 		boardReducer,
 		new Board(new BoardConfigs())
 	);
+
 	var guess = "";
-	board.attempts[board.currentAttempt].forEach((value) => {
-		guess += value ? value.letter : "";
-	});
+	if (board.currentAttempt < board.configs.allowedAttempts)
+		board.attempts[board.currentAttempt].forEach((value) => {
+			guess += value ? value.letter : "";
+		});
 
 	const handleAddLetter = (letter: string) => {
 		dispatch({
@@ -27,7 +29,11 @@ function App() {
 			<h1>QWERTLE</h1>
 			<h2>Your Worst Nightmare</h2>
 			<BoardView board={board} />
-			<h3>{board.isWon ? "YOU WON!" : "Current Guess: " + guess}</h3>
+			<h3>
+				{board.state === GAME_STATE.WON
+					? "YOU WON!"
+					: "Current Guess: " + guess}
+			</h3>
 			<Keyboard board={board} addLetter={handleAddLetter} />
 
 			<input
@@ -39,6 +45,7 @@ function App() {
 						payload: {},
 					});
 				}}
+				disabled={board.currentLetter === 0}
 			/>
 			<input
 				type="button"

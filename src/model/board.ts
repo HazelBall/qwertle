@@ -6,6 +6,12 @@ const DEFAULT_ATTEMPTS = 7;
 const DEFAULT_WORD_LENGTH = 4;
 const DEFAULT_KEYBOARD_LAYOUT = LETTER_MAPS.QWERTY;
 
+enum GAME_STATE {
+	IN_PROGRESS,
+	LOST,
+	WON,
+}
+
 /**
  * QWERTLE configurations, including number of guesses allowed,
  * number of letters per word, and the word to guess. Used to
@@ -50,7 +56,7 @@ class Board {
 	attempts: (Letter | null)[][];
 	keyboard: Map<string, Letter>;
 	canSubmit: boolean;
-	isWon: boolean;
+	state: GAME_STATE;
 
 	/**
 	 * Board constructor, which takes in optional configurations and board data
@@ -96,7 +102,7 @@ class Board {
 		this.configs = configs;
 		this.currentAttempt = currentAttempt;
 		this.currentLetter = currentLetter;
-		this.isWon = false;
+		this.state = GAME_STATE.IN_PROGRESS;
 
 		this.canSubmit = currentLetter >= configs.wordLength;
 
@@ -174,12 +180,20 @@ class Board {
 						);
 				});
 		});
-		let isGameWon = true;
+
+		let gameState: GAME_STATE = GAME_STATE.WON as GAME_STATE;
+
 		newAttempts[this.currentAttempt - 1].forEach((letter) => {
 			if (!letter || letter.status != LETTER_STATUS.CORRECT)
-				isGameWon = false;
+				gameState = GAME_STATE.IN_PROGRESS;
 		});
-		this.isWon = isGameWon;
+		if (
+			this.currentAttempt >= this.configs.allowedAttempts &&
+			gameState == GAME_STATE.IN_PROGRESS
+		)
+			gameState = GAME_STATE.LOST;
+		this.state = gameState;
+		console.log("Current Board State: " + GAME_STATE[gameState]);
 		return { attempts: newAttempts, keyboard: newKeyboard };
 	};
 
@@ -195,7 +209,8 @@ class Board {
 			newKeyboard.forEach((letter, key) => {
 				newKeyboard.set(
 					key,
-					this.isWon
+					this.state === GAME_STATE.WON ||
+						this.currentAttempt >= this.configs.allowedAttempts
 						? letter.updateValidity(false).updateSelection(false)
 						: letter.updateValidity(true).updateSelection(false)
 				);
@@ -423,4 +438,4 @@ class Board {
 	};
 }
 
-export { Board, BoardConfigs, LETTER_STATUS };
+export { Board, BoardConfigs, GAME_STATE };
