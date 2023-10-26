@@ -1,12 +1,29 @@
 import { GAME_STATE } from "./board";
 
+/**
+ * 
+ */
+class GameStats {
+    date:Date;
+    state:GAME_STATE;
+    guesses:Number;
 
+    constructor(date:Date, state:GAME_STATE, guesses:Number) {
+        this.date = date;
+        this.state = state;
+        this.guesses = guesses;
+    }
+}
+
+/**
+ * 
+ */
 class SavedStats {
     previousStreak: number;
-    previousCompletions:[{date:Date, state:GAME_STATE, guesses:number}];
+    previousCompletions:GameStats[];
     constructor(
         previousStreak:number,
-        previousCompletions:[{date:Date, state:GAME_STATE, guesses:number}]
+        previousCompletions:GameStats[]
     ) {
         this.previousStreak = previousStreak;
         this.previousCompletions = previousCompletions;
@@ -27,4 +44,16 @@ class SavedStats {
         return false;
     }
 
+    /**
+     * 
+     * @param newStreak 
+     * @param newCompletion 
+     * @returns 
+     */
+    updateStats(newStreak:number, newCompletion:GameStats) {
+        return new SavedStats(newStreak, [...this.previousCompletions, newCompletion])
+    }
+
 }
+
+export {SavedStats, GameStats};
