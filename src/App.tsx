@@ -1,9 +1,10 @@
 import React, { useState, useReducer } from "react";
-import "./App.css";
+import "./styles/App.css";
 import Keyboard from "./Components/Keyboard";
 import { BOARD_ACTIONS, boardReducer } from "./reducers/boardReducer";
 import { Board, BoardConfigs, GAME_STATE } from "./model/board";
 import BoardView from "./Components/BoardView";
+import EndModal from "./Components/EndModal";
 
 function App() {
 	const [board, dispatch] = useReducer(
@@ -29,11 +30,13 @@ function App() {
 			<h1>QWERTLE</h1>
 			<h2>Your Worst Nightmare</h2>
 			<BoardView board={board} />
-			<h3>
-				{board.state === GAME_STATE.WON
-					? "YOU WON!"
-					: "Current Guess: " + guess}
-			</h3>
+			<dialog open = {board.state !== GAME_STATE.IN_PROGRESS} >
+				<EndModal board={board}/>
+			</dialog><EndModal board={board}/>
+			
+			{board.state === GAME_STATE.IN_PROGRESS
+				&& <h3>{"Current Guess: " + guess}</h3>
+			}
 			<Keyboard board={board} addLetter={handleAddLetter} />
 
 			<input

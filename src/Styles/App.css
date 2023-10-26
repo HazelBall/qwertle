@@ -62,3 +62,8 @@
   margin: 5px 5px;
   padding: 5px;
 }
+
+dialog {
+  z-index: 10;
+  
+}
