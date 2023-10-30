@@ -64,6 +64,9 @@ function App() {
 			{/*
 			<input type="button" value="Enter" />
 			*/}
+			<div>
+				<button onClick={() => localStorage.clear()}>Clear</button>
+			</div>
 		</div>
 	);
 }

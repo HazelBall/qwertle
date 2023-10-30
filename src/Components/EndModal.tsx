@@ -15,7 +15,7 @@ const EndModal = (props:{board:Board}) => {
         let newStreak = board.state === GAME_STATE.WON && savedStats.isStreakValid()
             ? savedStats.previousStreak + 1 : 1;
         
-        savedStats = savedStats.updateStats(savedStats.previousStreak + 1, new GameStats(new Date(Date.now()), board.state, board.currentAttempt))
+        savedStats = savedStats.updateStats(savedStats.previousStreak + 1, new GameStats(new Date(Date.now()), board.state, board.currentAttempt + 1))
     }
 
     return (
@@ -23,6 +23,7 @@ const EndModal = (props:{board:Board}) => {
             <div className="modal">
                 {board.state === GAME_STATE.WON && <h1>YOU WON!</h1>}
                 {board.state === GAME_STATE.LOST && <h1>YOU LOST!</h1>}
+                <p>{board.state !== GAME_STATE.IN_PROGRESS && savedStats.previousCompletions[savedStats.previousCompletions.length - 1].state}</p>
             </div>
         </>
     )
