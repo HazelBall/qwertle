@@ -159,7 +159,7 @@
 		width: calc(100vw - 150px);
 		margin: 10px auto;
 	}
-	.letterGuess {
+	.letterGuess, .guess-letter {
 		box-sizing: border-box;
 		font-size: 8vw;
 		height: calc(calc(100vw - 190px)/4);

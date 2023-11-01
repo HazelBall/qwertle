@@ -3,9 +3,10 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  --size: 40px;
+  --size: 30px;
   --height: calc(var(--size) * 1.157);
-  --margin: 5px;
+  --margin: 2px;
+  --font-size:16px;
 }
 
 .keyboard, .keyboard-row {
@@ -20,14 +21,12 @@
   box-sizing: border-box;
   vertical-align: middle;
   display: inline-block;
-}
-
-.keyboard-letter, .keyboard-spacer {
   clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
   width: var(--size);
-  margin: 0 var(--margin);
   height: var(--height);
-  font-size: 20px; 
+  margin: 0 var(--margin);
+  font-size: var(--font-size);
+  text-align: center;
   border:none;
 }
 
@@ -55,12 +54,9 @@
 }
 
 .guess-letter {
-  width: 30px;
-  height: 30px;
+  margin-bottom:5px;
   background-color: lightgray;
   color: black;
-  margin: 5px 5px;
-  padding: 5px;
 }
 
 dialog {

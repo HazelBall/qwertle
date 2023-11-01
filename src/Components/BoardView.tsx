@@ -16,12 +16,11 @@ const BoardView = (props: { board: Board }) => {
 									letter={letter}
 								/>
 							) : (
-								<span
+								<input disabled
 									key={"guess-" + j}
 									className="guess-letter"
-								>
-									{" "}
-								</span>
+									value=""
+								/>
 							);
 						})}
 					</div>

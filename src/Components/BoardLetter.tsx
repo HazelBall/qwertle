@@ -9,7 +9,10 @@ const BoardLetter = (props: { letter: Letter }) => {
 			? classes
 			: classes + " " + LETTER_STATUS[props.letter.status].toLowerCase();
 
-	return <span className={classes}>{letter.letter}</span>;
+	return <input 
+		disabled 
+		className={classes}
+		value={letter.letter}></input>;
 };
 
 export default BoardLetter;
