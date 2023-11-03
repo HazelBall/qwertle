@@ -4,6 +4,13 @@ enum LETTER_STATUS {
 	MISPLACED,
 	CORRECT,
 }
+enum HEX_SOURCE {
+	DEFAULT = "../../public/hex-default.svg",
+	INCORRECT = "../../public/hex-incorrect.svg",
+	MISPLACED = "../../public/hex-incorrect.svg",
+	CORRECT = "../../public/hex-correct.svg",
+	SELECTED = "../../public/hex-selected.svg"
+}
 const KEYBOARD_SPACER = "_";
 
 /**
@@ -70,4 +77,4 @@ class Letter {
 	}
 }
 
-export { Letter, LETTER_STATUS, KEYBOARD_SPACER };
+export { Letter, LETTER_STATUS, KEYBOARD_SPACER, HEX_SOURCE };

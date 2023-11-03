@@ -1,5 +1,5 @@
 import React from "react";
-import { LETTER_STATUS, Letter } from "../model/letter";
+import { LETTER_STATUS, Letter, HEX_SOURCE } from "../model/letter";
 
 const BoardLetter = (props: { letter: Letter }) => {
 	let letter = props.letter;
@@ -9,10 +9,17 @@ const BoardLetter = (props: { letter: Letter }) => {
 			? classes
 			: classes + " " + LETTER_STATUS[props.letter.status].toLowerCase();
 
-	return <input 
-		disabled 
-		className={classes}
-		value={letter.letter}></input>;
+	const getHexSource = () => {
+		if(props.letter.status === LETTER_STATUS.DEFAULT) return HEX_SOURCE.DEFAULT
+		else if(props.letter.status === LETTER_STATUS.CORRECT) return HEX_SOURCE.CORRECT
+		else if(props.letter.status === LETTER_STATUS.MISPLACED) return HEX_SOURCE.MISPLACED
+		else if(props.letter.status === LETTER_STATUS.INCORRECT) return HEX_SOURCE.INCORRECT;
+	}
+	
+	return <span className = {classes}>
+			<img src = {getHexSource()} className = "hexagon"/>
+			<span>{letter.letter}</span>
+		</span>
 };
 
 export default BoardLetter;

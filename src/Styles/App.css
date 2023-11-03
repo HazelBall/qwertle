@@ -7,6 +7,12 @@
   --height: calc(var(--size) * 1.157);
   --margin: 2px;
   --font-size:16px;
+
+  --letter-color--default: white;
+  --letter-color--correct: #59A96A;
+  --letter-color--misplaced: #FFB833;
+  --letter-color--incorrect: #FF4A47;
+  --letter-color--disabled: #9F9FA8;
 }
 
 .keyboard, .keyboard-row {
@@ -21,37 +27,52 @@
   box-sizing: border-box;
   vertical-align: middle;
   display: inline-block;
-  clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
   width: var(--size);
   height: var(--height);
   margin: 0 var(--margin);
   font-size: var(--font-size);
   text-align: center;
   border:none;
+  position: relative;
 }
 
-.keyboard-letter.correct, .guess-letter.correct {
-  background-color: rgb(87, 153, 87);
+.keyboard-letter input, .guess-letter span {
+  z-index: 5;
+}
+
+.keyboard-letter img, .guess-letter img {
+  width: var(--size);
+  height: var(--height);
+  object-fit:contain;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/*.keyboard-letter.correct, .guess-letter.correct {
+  background-color: var(--letter-color--correct);
 }
 
 .keyboard-letter.misplaced, .guess-letter.misplaced {
-  background-color: yellow;
+  background-color: var(--letter-color--misplaced);
 }
 
 .keyboard-letter.incorrect, .guess-letter.incorrect {
-  background-color: red;
+  background-color: var(--letter-color--incorrect);
   color: white;
 }
 
 .keyboard-letter:disabled {
-  background-color: rgb(140, 140, 140);
+  background-color: var(--letter-color--disabled);
   color: rgb(200, 200, 200);
 }
 
 .keyboard-letter.selected {
   background-color: white;
+  box-shadow: 1px black;
   color: black;
-}
+}*/
 
 .guess-letter {
   margin-bottom:5px;
@@ -62,4 +83,24 @@
 dialog {
   z-index: 10;
   
+}
+
+.testHex {
+  background-image: url("../../public/hexagon-icon.svg");
+  background-size:var(--size);
+  -webkit-backdrop-filter: drop-shadow(1px 1px 2px #222);
+  backdrop-filter: drop-shadow(1px 1px 2px #222);
+  width: var(--size);
+  height:var(--height);
+  vertical-align: middle;
+  color: white;
+}
+
+.testHex2 {
+  width: var(--size);
+  height:var(--height);
+  vertical-align: middle;
+  -webkit-filter: drop-shadow(1px 1px 2px #222);
+  filter: drop-shadow(1px 1px 2px #222);
+  color: black;
 }

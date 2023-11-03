@@ -16,11 +16,12 @@ const BoardView = (props: { board: Board }) => {
 									letter={letter}
 								/>
 							) : (
-								<input disabled
+								<span
 									key={"guess-" + j}
 									className="guess-letter"
-									value=""
-								/>
+								>
+									<img src = "../../public/hex-default.svg"></img>
+								</span>
 							);
 						})}
 					</div>
