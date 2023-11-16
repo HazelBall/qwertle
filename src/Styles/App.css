@@ -57,8 +57,8 @@
 }
 
 .guess-letter--input {
-  display: inline-block;
-  vertical-align: middle;
+  display: grid;
+  align-items: center;
 }
 
 .keyboard-letter input, .guess-letter .guess-letter--input {

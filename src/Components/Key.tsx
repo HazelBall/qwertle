@@ -32,7 +32,7 @@ const Key = (props: {
 		<span className={classes}>
 			<img src = {getHexSource()} className = "hexagon"/>
 			<input type = "button" disabled={!props.letter.isValidLetter}
-				value = {props.letter.letter}
+				value = {props.letter.letter.toUpperCase()}
 				onClick={() => props.addLetter(letter.letter)}/>
 		</span>
 	);
