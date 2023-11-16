@@ -6,6 +6,7 @@ enum LETTER_STATUS {
 }
 enum HEX_SOURCE {
 	DEFAULT = "/hex-default.svg",
+	DISABLED = "/hex-disabled.svg",
 	INCORRECT = "/hex-incorrect.svg",
 	MISPLACED = "/hex-misplaced.svg",
 	CORRECT = "/hex-correct.svg",
