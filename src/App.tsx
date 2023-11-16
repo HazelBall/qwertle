@@ -12,12 +12,6 @@ function App() {
 		new Board(new BoardConfigs())
 	);
 
-	var guess = "";
-	if (board.currentAttempt < board.configs.allowedAttempts)
-		board.attempts[board.currentAttempt].forEach((value) => {
-			guess += value ? value.letter : "";
-		});
-
 	const handleAddLetter = (letter: string) => {
 		dispatch({
 			type: BOARD_ACTIONS.ADD_LETTER,
@@ -33,10 +27,7 @@ function App() {
 			<dialog open = {board.state !== GAME_STATE.IN_PROGRESS} >
 				<EndModal board={board}/>
 			</dialog><EndModal board={board}/>
-			
-			{board.state === GAME_STATE.IN_PROGRESS
-				&& <h3>{"Current Guess: " + guess}</h3>
-			}
+			<h3>Guess</h3>
 			<Keyboard board={board} addLetter={handleAddLetter} />
 
 			<input

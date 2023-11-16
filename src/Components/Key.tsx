@@ -20,7 +20,6 @@ const Key = (props: {
 	const getHexSource = () => {
 		
 		if(props.letter === undefined) return HEX_SOURCE.DEFAULT
-		console.log(props.letter.letter);
 		if(props.letter.isSelected) return HEX_SOURCE.SELECTED
 		else if(!props.letter.isValidLetter) return HEX_SOURCE.DISABLED;
 		else if(props.letter.status === LETTER_STATUS.DEFAULT) return HEX_SOURCE.DEFAULT
