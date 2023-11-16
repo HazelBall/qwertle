@@ -82,4 +82,4 @@ const LETTER_MAPS: Layouts = {
 	},
 };
 
-export { LETTER_MAPS };
+export { LETTER_MAPS, type Layout };
