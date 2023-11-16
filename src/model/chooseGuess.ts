@@ -8,40 +8,57 @@ const getSeed = () => {
 }
 
 // returns empty array if not possible
-const chooseGuessHelper:(layout:Layout, seed:seedrandom.PRNG , previousLetters:string[])=>string[] 
-    = (layout, seed , previousLetters) => {
+const chooseGuessHelper:(layout:Layout, previousLetters:string[])=>string[] 
+    = (layout, previousLetters) => {
     // If no letter is chosen, choose a completely random letter
     // if there are previous letters:
         // get last letter
         // choose a random letter connected to it
         // see if that letter has connected letters that are valid. if not, choose new random letter
         // return recursive of this function
-    if(previousLetters.length = 0) {
-        let row = Math.floor(seed.quick() * layout.layout.length);
-        let column = Math.floor(seed.quick() * layout.layout[row].length);
+    if(previousLetters.length === 0) {
+        console.log("\tFIRST LETTER CHOOSING")
+        
+        let row = Math.floor(Math.random() * layout.layout.length);
+        let column = Math.floor(Math.random() * layout.layout[row].length);
         let letter = layout.layout[row][column];
-        let guess = chooseGuessHelper(layout, seed, [letter]);
+
+        console.log("\t\tNew Letter: " + letter);
+        let guess = chooseGuessHelper(layout, [letter]);
         return guess;
         
     } else {
-        if(previousLetters.length === 4) return previousLetters;
-
+        if(previousLetters.length === 4) {
+            console.log("All Letters Chosen");
+            return previousLetters;
+        }
+        console.log("\tNEXT LETTER CHOOSING");
         let wrongOptions = "";
 
+        
         let lastLetter = previousLetters[previousLetters.length - 1];
         let newLetterOptions = layout.map.get(lastLetter);
+        console.log("\t\tOPTIONS:");
+        console.log(newLetterOptions);
+        
         if(!newLetterOptions) return []
-        let newLetter = newLetterOptions[Math.floor(seed.quick() * newLetterOptions.length)]
+        var newLetter = newLetterOptions[Math.floor(Math.random() * newLetterOptions.length)]
+        console.log("\t\tNew Letter: " + newLetter);
         while(wrongOptions.includes(newLetter) || previousLetters.includes(newLetter)) {
-            let newLetter = newLetterOptions[Math.floor(seed.quick() * newLetterOptions.length)]
+            wrongOptions += newLetter;
+            console.log("\t\tLETTER WRONG");
+            newLetter = newLetterOptions[Math.floor(Math.random() * newLetterOptions.length)]
         }
-        previousLetters.push(newLetter)
-        return chooseGuessHelper(layout, seed, previousLetters);
+        let newPreviousLetters = [...previousLetters, newLetter]
+        return chooseGuessHelper(layout, newPreviousLetters);
+       return [];
     }
 }
 
-const chooseGuess =(chosenLayout:Layout) => {
-    let layout = LETTER_MAPS.Layout;
-    let rng = seedrandom(getSeed());
-    return chooseGuessHelper(layout, rng, [])
+const chooseGuess =(layout:Layout) => {
+    seedrandom(getSeed(), { global: true });
+    console.log("CHOOSING LETTERS")
+    return chooseGuessHelper(layout, [])
 }
+
+export default chooseGuess;

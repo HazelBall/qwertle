@@ -5,11 +5,16 @@ import { BOARD_ACTIONS, boardReducer } from "./reducers/boardReducer";
 import { Board, BoardConfigs, GAME_STATE } from "./model/board";
 import BoardView from "./Components/BoardView";
 import EndModal from "./Components/EndModal";
+import chooseGuess from "./model/chooseGuess";
+import { LETTER_MAPS } from "./model/lettermaps";
 
 function App() {
+
+	const todaysLetters = chooseGuess(LETTER_MAPS.QWERTY);
+	const todaysGuess = todaysLetters[0] + todaysLetters[1] + todaysLetters[2] + todaysLetters[3];
 	const [board, dispatch] = useReducer(
 		boardReducer,
-		new Board(new BoardConfigs())
+		new Board(new BoardConfigs(todaysGuess))
 	);
 
 	const handleAddLetter = (letter: string) => {
