@@ -18,7 +18,7 @@ const BoardLetter = (props: { letter: Letter }) => {
 	
 	return <span className = {classes}>
 			<img src = {getHexSource()} className = "hexagon"/>
-			<span>{letter.letter}</span>
+			<span className="guess-letter--input">{letter.letter}</span>
 		</span>
 };
 

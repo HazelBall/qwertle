@@ -3,10 +3,15 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  --size: 30px;
-  --height: calc(var(--size) * 1.157);
-  --margin: 2px;
-  --font-size:16px;
+  --size-keyboard: 30px;
+  --height-keyboard: calc(var(--size-keyboard) * 1.157);
+  --margin-keyboard: 2px;
+  --font-size-keyboard: 16px;
+  
+  --size-guess: 60px; 
+  --height-guess: calc(var(--size-guess) * 1.157);
+  --margin-guess: 2px;
+  --font-size-guess:32px;
 
   --letter-color--default: white;
   --letter-color--correct: #59A96A;
@@ -27,27 +32,51 @@
   box-sizing: border-box;
   vertical-align: middle;
   display: inline-block;
-  width: var(--size);
-  height: var(--height);
-  margin: 0 var(--margin);
-  font-size: var(--font-size);
   text-align: center;
   border:none;
   position: relative;
+  color: black;
 }
 
-.keyboard-letter input, .guess-letter span {
+.keyboard-letter, .keyboard-spacer, .keyboard-letter img, .keyboard-letter input {
+  width: var(--size-keyboard);
+  height: var(--height-keyboard);
+}
+.keyboard-letter, .keyboard-spacer {
+  margin: 0 var(--margin-keyboard);
+  font-size: var(--font-size-keyboard);
+}
+
+.guess-letter, .guess-letter img, .guess-letter--input {
+  width: var(--size-guess);
+  height: var(--height-guess);
+}
+.guess-letter {
+  margin: 0 var(--margin-guess);
+  font-size: var(--font-size-guess);
+}
+
+.guess-letter--input {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.keyboard-letter input, .guess-letter .guess-letter--input {
   z-index: 5;
+  padding: none;
+  margin: none;
+  border: none;
+  color: black;
 }
 
 .keyboard-letter img, .guess-letter img {
-  width: var(--size);
-  height: var(--height);
   object-fit:contain;
   position: absolute;
   top: 0;
   left: 0;
   z-index: -1;
+  -webkit-filter: drop-shadow(1px 1px 2px #222);
+  filter: drop-shadow(1px 1px 2px #222);
 }
 
 /*.keyboard-letter.correct, .guess-letter.correct {
@@ -76,31 +105,17 @@
 
 .guess-letter {
   margin-bottom:5px;
-  background-color: lightgray;
-  color: black;
+  
+}
+
+.keyboard-letter input {
+  background-color: rgba(0,0,0,0);
+  font-size:var(--font-size-keyboard);
+  padding: none;
+  display: inline-block;
 }
 
 dialog {
   z-index: 10;
   
-}
-
-.testHex {
-  background-image: url("../../public/hexagon-icon.svg");
-  background-size:var(--size);
-  -webkit-backdrop-filter: drop-shadow(1px 1px 2px #222);
-  backdrop-filter: drop-shadow(1px 1px 2px #222);
-  width: var(--size);
-  height:var(--height);
-  vertical-align: middle;
-  color: white;
-}
-
-.testHex2 {
-  width: var(--size);
-  height:var(--height);
-  vertical-align: middle;
-  -webkit-filter: drop-shadow(1px 1px 2px #222);
-  filter: drop-shadow(1px 1px 2px #222);
-  color: black;
 }

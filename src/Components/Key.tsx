@@ -15,10 +15,13 @@ const Key = (props: {
 			? classes
 			: classes + " " + LETTER_STATUS[props.letter.status].toLowerCase();
 	classes = letter.isSelected ? classes + " selected" : classes;
+	classes = letter.isValidLetter ? classes : classes + " disabled";
 
 	const getHexSource = () => {
+		
 		if(props.letter === undefined) return HEX_SOURCE.DEFAULT
-		else if(props.letter.isSelected) return HEX_SOURCE.SELECTED
+		console.log(props.letter.letter);
+		if(props.letter.isSelected) return HEX_SOURCE.SELECTED
 		else if(props.letter.status === LETTER_STATUS.DEFAULT) return HEX_SOURCE.DEFAULT
 		else if(props.letter.status === LETTER_STATUS.CORRECT) return HEX_SOURCE.CORRECT
 		else if(props.letter.status === LETTER_STATUS.MISPLACED) return HEX_SOURCE.MISPLACED

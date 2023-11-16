@@ -5,11 +5,11 @@ enum LETTER_STATUS {
 	CORRECT,
 }
 enum HEX_SOURCE {
-	DEFAULT = "../../public/hex-default.svg",
-	INCORRECT = "../../public/hex-incorrect.svg",
-	MISPLACED = "../../public/hex-incorrect.svg",
-	CORRECT = "../../public/hex-correct.svg",
-	SELECTED = "../../public/hex-selected.svg"
+	DEFAULT = "/hex-default.svg",
+	INCORRECT = "/hex-incorrect.svg",
+	MISPLACED = "/hex-misplaced.svg",
+	CORRECT = "/hex-correct.svg",
+	SELECTED = "/hex-selected.svg"
 }
 const KEYBOARD_SPACER = "_";
 
