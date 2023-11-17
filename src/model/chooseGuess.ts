@@ -28,6 +28,7 @@ const chooseGuessHelper:(layout:Layout, previousLetters:string[])=>string[]
         return guess;
         
     } else {
+        //End recursion if total length is found.
         if(previousLetters.length === 4) {
             console.log("All Letters Chosen");
             return previousLetters;

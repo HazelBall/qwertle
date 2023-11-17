@@ -31,8 +31,7 @@ function App() {
 			<BoardView board={board} />
 			<dialog open = {board.state !== GAME_STATE.IN_PROGRESS} >
 				<EndModal board={board}/>
-			</dialog><EndModal board={board}/>
-			<h3>Guess</h3>
+			</dialog>
 			<Keyboard board={board} addLetter={handleAddLetter} />
 
 			<input

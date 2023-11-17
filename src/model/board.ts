@@ -2,7 +2,7 @@ import { Letter, LETTER_STATUS } from "./letter";
 import { LETTER_MAPS } from "./lettermaps";
 
 const DEFAULT_WORD = "wasd";
-const DEFAULT_ATTEMPTS = 7;
+const DEFAULT_ATTEMPTS = 5;
 const DEFAULT_WORD_LENGTH = 4;
 const DEFAULT_KEYBOARD_LAYOUT = LETTER_MAPS.QWERTY;
 
