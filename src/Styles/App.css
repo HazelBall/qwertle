@@ -98,30 +98,6 @@ h2, h3 {
     drop-shadow(0 0 5px #FF4A47);
 }
 
-/*.keyboard-letter.correct, .guess-letter.correct {
-  background-color: var(--letter-color--correct);
-}
-
-.keyboard-letter.misplaced, .guess-letter.misplaced {
-  background-color: var(--letter-color--misplaced);
-}
-
-.keyboard-letter.incorrect, .guess-letter.incorrect {
-  background-color: var(--letter-color--incorrect);
-  color: white;
-}
-
-.keyboard-letter:disabled {
-  background-color: var(--letter-color--disabled);
-  color: rgb(200, 200, 200);
-}
-
-.keyboard-letter.selected {
-  background-color: white;
-  box-shadow: 1px black;
-  color: black;
-}*/
-
 .guess-letter {
   margin-bottom:5px;
   
