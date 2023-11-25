@@ -21,15 +21,15 @@ var date = "" + d.getFullYear() + ("0" + (d.getMonth()+1)).slice(-2) + ("0" + d.
 Math.seedrandom(date);
 
 var word = "";
-for(i = 0; i < numLetters; i ++) {
-	var newLetter = alphabet.charAt(Math.floor(Math.random() * 27));
+for(let i = 0; i < numLetters; i ++) {
+	var newLetter = alphabet.charAt(Math.floor(Math.random() * 26));
 	while(word.includes(newLetter)) {
-		alphabet.charAt(Math.floor(Math.random() * 27));
+		newLetter = alphabet.charAt(Math.floor(Math.random() * 26));
 	}
 	word += newLetter;
 }
 
-for(i = 0; i < numGuesses; i ++) {
+for(let i = 0; i < numGuesses; i ++) {
 	var row = document.createElement('div');
 	var inputRow = [];
 	for(j = 0; j < numLetters; j ++) {
@@ -118,7 +118,7 @@ function submit() {
 function analyzeGuess(guess, past) {
 	var numCorrect = 0;
 	var pastGuesses = ""
-	for(i = 0; i < numLetters; i ++) {
+	for(let i = 0; i < numLetters; i ++) {
 		if(inputs[guess][i].value == word.charAt(i)) {
 			pastGuesses += word.charAt(i)
 			inputs[guess][i].classList.toggle("right");
@@ -126,7 +126,7 @@ function analyzeGuess(guess, past) {
 			letters[inputs[guess][i].value] = 2;
 		}
 	}
-	for(i = 0; i < numLetters; i ++) {
+	for(let i = 0; i < numLetters; i ++) {
 		if(word.includes(inputs[guess][i].value) && 
 				!pastGuesses.includes(inputs[guess][i].value)) {
 			inputs[guess][i].classList.toggle("close");
@@ -240,7 +240,7 @@ function toggleLoseModal() {
 
 function printAttempts() {
 	var ret = [];
-	for(var i = 0; i <=currentGuess; i ++) {
+	for(let i = 0; i <=currentGuess; i ++) {
 		temp = []
 		for(var j = 0; j <= numLetters; j++) {
 			if(j === numLetters && i != currentGuess) {
@@ -251,7 +251,7 @@ function printAttempts() {
 		}
 		ret.push(temp);
 	}
-	for(var i = 0; i <=currentGuess; i++) {
+	for(let i = 0; i <=currentGuess; i++) {
 		var pastGuesses = "";
 		for(j = 0; j < numLetters; j ++) {
 			if(inputs[i][j].value == word.charAt(j)) {
@@ -274,7 +274,7 @@ function printAttempts() {
 		}
 	}
 	val = "";
-	for(i = 0; i <= currentGuess; i++) {
+	for(let i = 0; i <= currentGuess; i++) {
 		for(j = 0; j <= numLetters; j++) {
 			val += ret[i][j]
 		}
