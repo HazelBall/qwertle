@@ -31,10 +31,11 @@ for(let i = 0; i < numLetters; i ++) {
 
 for(let i = 0; i < numGuesses; i ++) {
 	var row = document.createElement('div');
+	row.classList.add("row");
 	var inputRow = [];
 	for(j = 0; j < numLetters; j ++) {
 		var e = document.createElement('input');
-		e.classList.add("letterGuess");
+		e.classList.add("letter");
 		e.readOnly = true;
 		e.maxLength = "1";
 		inputRow.push(e);
@@ -86,6 +87,7 @@ function loadAttempts() {
 			i++
 		}
 	}
+	toggleModal("advertisement")
 }
 
 function addLetter(l) {
@@ -190,14 +192,18 @@ function shareAttempts() {
       		title: 'Qwertle Score',
       		text: ret,
       		url: 'https://qwertle.com'
-    	}).then(() => {
-      		console.log('Thanks for sharing!');
-    	})
-    	.catch(console.error);
+    	}).catch(() => {
+			alert("something went wrong");
+		  });
 	} else {
   		// Fallback
-  		navigator.clipboard.writeText(ret);
-  		alert("Your score was added to your clipboard!");
+  		navigator.clipboard.writeText(ret)
+			.then(() => {
+				alert("successfully copied");
+		  	})
+		  	.catch(() => {
+				alert("something went wrong");
+		  	});;
 	}
 }
  
@@ -307,7 +313,13 @@ function getTime() {
 	}, 1000);
 }
  
+
 function toggleModal(id) {
 	var modal = document.getElementById(id);
-	modal.classList.toggle("open");
+	modal.open ? modal.close()
+		: modal.showModal();
+}
+
+function changeLetter(element) {
+	element.innerHTML = alphabet.charAt(Math.floor(Math.random() * 26));
 }

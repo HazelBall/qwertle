@@ -15,21 +15,42 @@
 	margin: 5px;
 }
 
-#board {
-	width: 200px;
-	margin: 10px auto;
+#board, #keyboard, #board .row, #keyboard .row {
+	display: flex;
+	align-items:center;
 }
 
-.letterGuess {
+#board, #board .row {
+	gap: 5px;
+}
+
+#keyboard, #keyboard .row {
+	gap: 3px;
+}
+
+#board, #keyboard {
+	flex-direction: column;
+	margin: 10px 0;
+}
+
+#board .row, #keyboard .row {
+	flex-direction: row;
+}
+
+.letter {
+	color: #4f5c5d;
+	background-color: white;
+	text-align: center;
+	border-radius: 5px;
+	border: 2px solid #7f8c8d;
+}
+
+#board .letter {
+	box-sizing: border-box;
 	font-size: 25px;
 	height: 45px;
 	width: 45px;
-	margin: 2px;
 	padding: 0;
-	color: #4f5c5d;
-	border: 2px solid #7f8c8d;
-	border-radius: 5px;
-	text-align: center;
 }
 
 #keyboard {
@@ -42,19 +63,14 @@
 	justify-content: center;
 }
 
-.letter {
-	background-color: white;
+#keyboard .letter {
 	display: block;
 	font-size: 16px;
-	margin: 2px;
 	padding: 5px 7px;
 	min-width: 32px;
-	border: 1px solid #7f8c8d;
-	border-radius: 4px;
-  	text-align: center;
 }
 
-.letter:hover {
+#keyboard .letter:hover {
 	cursor: pointer;
 }
 
@@ -74,54 +90,15 @@
 	color: white;
 }
 
-.modal {
-	display: none;
-	transition: 0.5s;
-	z-index: 1;
-	position: fixed;
-	width: 350px;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	padding: 5px 20px;
-	background-color: white;
-	border: 2px solid #3f4c4d;
-	border-radius: 2px;
-	box-shadow: 2px 3px 7px 3px rgba(40, 40, 40, 0.3);
-	text-align: center;
-}
-
-.modal.open {
-	display: block;
-	top: calc(50% - 100px);
-}
-
-.modal .button {
-	display: inline-block;
-	background-color: #2ecc71;
-	padding: 7px 10px;
-	border: 2px solid #3f4c4d;
-	border-radius: 5px;
-	color: black;
-	margin: 15px 0 5px 0;
-}
-.modal .button:hover {
-	cursor: pointer;
-}
-.modal h2 {
-	margin: 10px 0 5px 0;
-}
-.modal p {
-	margin: 5px 0;
-}
-
-#closeModal {
+.closeModal {
 	position: absolute;
-	top: 15px;
-	right: 20px;
+	top: 10px;
+	right: 10px;
 	font-size: 20px;
+	border: none;
+	background-color: transparent;
 }
-#closeModal:hover {
+.closeModal:hover {
 	cursor: pointer;
 }
 
@@ -129,47 +106,64 @@
 	font-size: 10px;
 	position: fixed;
 	bottom: 0;
+	right: 0;
+	padding: 10px;
+	margin: 0;
 }
 #letterChange {
 	padding: 0 6px;
 	margin: 0 2px;
+	min-width:41px;
 	border: 2px solid #7f8c8d;
 	border-radius: 4px;
 	display: inline-block;
 	background-color: white;
+	cursor:pointer;
 }
 
-@media screen and (max-width: 1000px) {
-	.game {
-		position: fixed;
-  		top: 50%;
-  		left: 50%;
-  		transform: translate(-50%, -50%);
-  		margin: 0 auto;
-		
+dialog {
+	border: none !important;
+  	border-radius: 20px;
+  	box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  	padding: 0.4rem 3rem;
+  	max-width: 400px;
+}
+dialog::backdrop {
+	backdrop-filter: blur(2px);
+	-webkit-backdrop-filter: blur(1px);
+}
+
+dialog#end {
+	text-align: center;
+}
+.share {
+	border: none;
+	background-color: #2ecc71;
+	color: white;
+	font-size: 16px;
+	padding: 10px 20px;
+	border-radius: 10px;
+	position: relative;
+	top: 0;
+	transition: 0.25s ease-out;
+	box-shadow: none;
+}
+
+.share:hover {
+	top: -3px;
+	box-shadow: 0 0 #0000, 0 0 #0000, 0 5px 20px -12px rgba(0, 0, 0, 0.5);
+}
+
+@media only screen and (max-width: 600px) {
+	#board .letter {
+		width: 35px;
+		height: 35px;
+		font-size: 18px;
+		border-radius: 5px;
 	}
-	.header {padding: 0 0 5px 0}
-	.header h1 {
-		font-size: 40px;
+	#keyboard .letter {
+		min-width: 28px;
+		height: 28px;
+		font-size: 14px;
 	}
-	#keyboard {
-		margin-top: 20px;
-	}
-	#board {
-		width: calc(100vw - 150px);
-		margin: 10px auto;
-	}
-	.letterGuess {
-		box-sizing: border-box;
-		font-size: 8vw;
-		height: calc(calc(100vw - 190px)/4);
-		width:  calc(calc(100vw - 190px)/4);
-		margin: 5px;
-		padding: 0;
-		color: #4f5c5d;
-		border: 0.85vw solid #7f8c8d;
-		border-radius: 2vw;
-		text-align: center;
-	}
-	
 }
