@@ -1,39 +1,43 @@
-var numGuesses = 7, numLetters = 4, currentGuess = 0, currentLetter = 0;
+const NUM_GUESSES = 7, 
+	NUM_LETTERS = 4,
+	ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+var currentGuess = 0, currentLetter = 0;
 
 var guessed = false;
 
-let gameBoard = document.getElementById("board");
+var gameBoard = document.getElementById("board");
 
 var streakW, streakL;
 
 var inputs = [];
-
-var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var date;
 var letters = {};
 var keys = {};
-for(i = 0; i < alphabet.length; i ++) {
-	letters[alphabet.charAt(i)] = 0;
-	keys[alphabet.charAt(i)] = document.getElementById(alphabet.charAt(i));
+for(i = 0; i < ALPHABET.length; i ++) {
+	letters[ALPHABET.charAt(i)] = 0;
+	keys[ALPHABET.charAt(i)] = document.getElementById(ALPHABET.charAt(i));
 }
+
 
 var d = new Date();
 var date = "" + d.getFullYear() + ("0" + (d.getMonth()+1)).slice(-2) + ("0" + d.getDate()).slice(-2);
 Math.seedrandom(date);
 
 var word = "";
-for(let i = 0; i < numLetters; i ++) {
-	var newLetter = alphabet.charAt(Math.floor(Math.random() * 26));
+for(let i = 0; i < NUM_LETTERS; i ++) {
+	var newLetter = ALPHABET.charAt(Math.floor(Math.random() * 26));
 	while(word.includes(newLetter)) {
-		newLetter = alphabet.charAt(Math.floor(Math.random() * 26));
+		newLetter = ALPHABET.charAt(Math.floor(Math.random() * 26));
 	}
 	word += newLetter;
 }
 
-for(let i = 0; i < numGuesses; i ++) {
+for(let i = 0; i < NUM_GUESSES; i ++) {
 	var row = document.createElement('div');
 	row.classList.add("row");
 	var inputRow = [];
-	for(j = 0; j < numLetters; j ++) {
+	for(j = 0; j < NUM_LETTERS; j ++) {
 		var e = document.createElement('input');
 		e.classList.add("letter");
 		e.readOnly = true;
@@ -44,6 +48,7 @@ for(let i = 0; i < numGuesses; i ++) {
 	inputs.push(inputRow);
 	gameBoard.appendChild(row);
 }
+
  
 document.addEventListener("keyup", function(event) {
 	if(!guessed) {
@@ -73,10 +78,10 @@ function loadAttempts() {
 	if(lastDate != null && lastDate === date) {
 		var i = 0;
 		var attemptedGuess = true;
-		while( i < numGuesses && attemptedGuess) {
+		while( i < NUM_GUESSES && attemptedGuess) {
 			var guess = localStorage.getItem("attempt-" + i);
 			if(guess != null) {
-				for(j = 0; j < numLetters; j ++) {
+				for(j = 0; j < NUM_LETTERS; j ++) {
 					inputs[i][j].value = guess.charAt(j);
 				}
 				analyzeGuess(i, true);
@@ -87,11 +92,14 @@ function loadAttempts() {
 			i++
 		}
 	}
-	toggleModal("advertisement")
+	if(localStorage.getItem("advertisement") === null) {
+		toggleModal("advertisement");
+		localStorage.setItem("advertisement", date);
+	}
 }
 
 function addLetter(l) {
-	if (currentLetter < numLetters && !guessed) {
+	if (currentLetter < NUM_LETTERS && !guessed) {
 		inputs[currentGuess][currentLetter].value = l;
 		currentLetter ++;
 	}
@@ -105,10 +113,10 @@ function removeLetter() {
 }
 
 function submit() {
-	if (currentLetter >= numLetters && !guessed) {
+	if (currentLetter >= NUM_LETTERS && !guessed) {
 		analyzeGuess(currentGuess, false);
 		guess = "";
-		for(i = 0; i < numLetters; i ++) guess += inputs[currentGuess][i].value;
+		for(i = 0; i < NUM_LETTERS; i ++) guess += inputs[currentGuess][i].value;
 		localStorage.setItem("lastDate", date);
 		localStorage.setItem("attempt-" + currentGuess, guess)
         currentGuess ++;
@@ -120,7 +128,7 @@ function submit() {
 function analyzeGuess(guess, past) {
 	var numCorrect = 0;
 	var pastGuesses = ""
-	for(let i = 0; i < numLetters; i ++) {
+	for(let i = 0; i < NUM_LETTERS; i ++) {
 		if(inputs[guess][i].value == word.charAt(i)) {
 			pastGuesses += word.charAt(i)
 			inputs[guess][i].classList.toggle("right");
@@ -128,7 +136,7 @@ function analyzeGuess(guess, past) {
 			letters[inputs[guess][i].value] = 2;
 		}
 	}
-	for(let i = 0; i < numLetters; i ++) {
+	for(let i = 0; i < NUM_LETTERS; i ++) {
 		if(word.includes(inputs[guess][i].value) && 
 				!pastGuesses.includes(inputs[guess][i].value)) {
 			inputs[guess][i].classList.toggle("close");
@@ -137,9 +145,9 @@ function analyzeGuess(guess, past) {
 				letters[inputs[guess][i].value] = 1;
 			}
 		} else {
-			inputs[guess][i].classList.toggle("wrong");
 			pastGuesses += inputs[guess][i].value;
-			if (letters[inputs[guess][i].value] === 0) {
+			if (letters[inputs[guess][i].value] <=0) {
+				inputs[guess][i].classList.toggle("wrong");
 				letters[inputs[guess][i].value] = -1;
 			}
 		}
@@ -166,7 +174,7 @@ function analyzeGuess(guess, past) {
 		}
 		toggleWinModal();
 		
-	} else if(currentGuess === numGuesses - 1) {
+	} else if(currentGuess === NUM_GUESSES - 1) {
 		guessed = true;
 		
 		if(!past) {
@@ -248,8 +256,8 @@ function printAttempts() {
 	var ret = [];
 	for(let i = 0; i <=currentGuess; i ++) {
 		temp = []
-		for(var j = 0; j <= numLetters; j++) {
-			if(j === numLetters && i != currentGuess) {
+		for(var j = 0; j <= NUM_LETTERS; j++) {
+			if(j === NUM_LETTERS && i != currentGuess) {
 				temp.push("\n");
 			} else {
 				temp.push("");
@@ -259,13 +267,13 @@ function printAttempts() {
 	}
 	for(let i = 0; i <=currentGuess; i++) {
 		var pastGuesses = "";
-		for(j = 0; j < numLetters; j ++) {
+		for(j = 0; j < NUM_LETTERS; j ++) {
 			if(inputs[i][j].value == word.charAt(j)) {
 				pastGuesses += word.charAt(i)
 				ret[i][j] = "🟩";
 			}
 		}
-		for(j = 0; j < numLetters; j ++) {
+		for(j = 0; j < NUM_LETTERS; j ++) {
 			if(word.includes(inputs[i][j].value) && 
 					!pastGuesses.includes(inputs[i][j].value)) {
 				pastGuesses += inputs[i][j].value;
@@ -281,7 +289,7 @@ function printAttempts() {
 	}
 	val = "";
 	for(let i = 0; i <= currentGuess; i++) {
-		for(j = 0; j <= numLetters; j++) {
+		for(j = 0; j <= NUM_LETTERS; j++) {
 			val += ret[i][j]
 		}
 	}
@@ -321,5 +329,12 @@ function toggleModal(id) {
 }
 
 function changeLetter(element) {
-	element.innerHTML = alphabet.charAt(Math.floor(Math.random() * 26));
+	let l = ALPHABET.charAt(Math.floor(Math.random() * 26));
+	element.innerHTML = l;
+	if(word[0] == l) {
+		element.classList.add("right");
+
+	} else {
+		element.classList.remove("right");
+	}
 }

@@ -75,9 +75,21 @@
 }
 
 
-.letterGuess.wrong, .letter.wrong {
+.letter.wrong {
 	background-color: #7f8c8d;
 	color: white;
+}
+#board .letter.wrong {
+	animation: incorrect 0.25s;
+}
+
+@keyframes incorrect {
+	0%,50%,100% {
+		translate: 0 0;
+	}
+	25%,75% {
+		translate: 2px;
+	}
 }
 
 .letterGuess.close, .letter.close {
@@ -85,7 +97,7 @@
 	color: white;
 }
 
-.letterGuess.right, .letter.right {
+.letterGuess.right, .letter.right, #letterChange.right {
 	background-color: #2ecc71;
 	color: white;
 }
