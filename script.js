@@ -338,3 +338,15 @@ function changeLetter(element) {
 		element.classList.remove("right");
 	}
 }
+
+let darkMode = localStorage.getItem("darkMode");
+if(darkMode === "enabled") {
+	document.body.classList.add("darkMode");
+}
+
+const toggleDarkMode = () => {
+	let darkModePreference = document.body.classList.toggle("darkMode")
+		? "enabled"
+		: "disabled";
+	localStorage.setItem("darkMode", darkModePreference);
+}

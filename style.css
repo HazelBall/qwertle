@@ -1,9 +1,49 @@
 @charset "UTF-8";
 
+:root {
+	--color-default: white;
+	--color-correct: #2ecc71;
+	--color-misplaced: #f1c40f;
+	--color-incorrect: #7f8c8d;
+	--foreground-primary: black;
+	--foreground-secondary: #000000aa;
+	--foreground-tertiary: #00000088;
+	--background-primary: #eeeef1;
+	--background-secondary:white;
+}
+
+.darkMode {
+	--color-default: #212124;
+	--color-correct: #249e57;
+	--color-misplaced: #cca60c;
+	--color-incorrect: #151516;
+	--foreground-primary: white;
+	--foreground-secondary: #ffffffc2;
+	--foreground-tertiary: #ffffff5a;
+	--background-primary: #161618;
+	--background-secondary:#212124;
+}
+
 * {
 	box-sizing: border-box;
 	font-family: sans-serif;
 	touch-action: manipulation;
+	color: var(--foreground-secondary);
+	transition: color 0.25s ease-out;
+	transition: background-color 0.25s ease-out;
+}
+
+body {
+	background-color: var(--background-primary);
+}
+
+h1, h2, h3, h4, h5, h6, h1 span {
+	color: var(--foreground-primary);
+}
+
+button {
+	background-color: var(--background-secondary);
+	color: var(--foreground-secondary);
 }
 
 .header {
@@ -38,11 +78,10 @@
 }
 
 .letter {
-	color: #4f5c5d;
-	background-color: white;
+	background-color: var(--color-default);
 	text-align: center;
 	border-radius: 5px;
-	border: 2px solid #7f8c8d;
+	border: 2px solid var(--foreground-tertiary);
 }
 
 #board .letter {
@@ -76,7 +115,7 @@
 
 
 .letter.wrong {
-	background-color: #7f8c8d;
+	background-color: var(--color-incorrect);
 	color: white;
 }
 #board .letter.wrong {
@@ -93,12 +132,12 @@
 }
 
 .letterGuess.close, .letter.close {
-	background-color: #f1c40f;
+	background-color: var(--color-misplaced);
 	color: white;
 }
 
 .letterGuess.right, .letter.right, #letterChange.right {
-	background-color: #2ecc71;
+	background-color: var(--color-correct);
 	color: white;
 }
 
@@ -126,14 +165,15 @@
 	padding: 0 6px;
 	margin: 0 2px;
 	min-width:41px;
-	border: 2px solid #7f8c8d;
+	border: 2px solid var(--foreground-tertiary);
 	border-radius: 4px;
 	display: inline-block;
-	background-color: white;
+	background-color: var(--color-default);
 	cursor:pointer;
 }
 
 dialog {
+	background-color: var(--background-secondary);
 	border: none !important;
   	border-radius: 20px;
   	box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -142,7 +182,7 @@ dialog {
 }
 dialog::backdrop {
 	backdrop-filter: blur(2px);
-	-webkit-backdrop-filter: blur(1px);
+	-webkit-backdrop-filter: blur(2px);
 }
 
 dialog#end {
@@ -150,7 +190,7 @@ dialog#end {
 }
 .share {
 	border: none;
-	background-color: #2ecc71;
+	background-color: VAR(--color-correct);
 	color: white;
 	font-size: 16px;
 	padding: 10px 20px;
@@ -178,4 +218,31 @@ dialog#end {
 		height: 28px;
 		font-size: 14px;
 	}
+}
+
+#dark-mode-toggle {
+	box-sizing: border-box;
+	background-color: transparent;
+	color: var(--foreground-tertiary);
+	background-color: var(--background-secondary);
+	padding: 3px;
+	width: 28px;
+	height: 28px;
+	font-size: 18px;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	border: 2px solid var(--foreground-secondary);
+	border-radius: 4px;
+}
+#dark-mode-toggle i {
+	color: var(--foreground-secondary);
+}
+
+#dark-mode-toggle:hover {
+	border-color: var(--foreground-primary);
+	
+}
+#dark-mode-toggle:hover i {
+	color: var(--foreground-primary);
 }

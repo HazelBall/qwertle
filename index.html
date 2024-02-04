@@ -17,9 +17,18 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+	<link rel="icon" href="/favicon.ico" sizes="any">
 	<link rel = "stylesheet" type = "text/css" href = "style.css">
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body onload = "loadAttempts()">
+	<button 
+		id = "dark-mode-toggle" 
+		aria-label="Toggle dark mode"
+		onclick = "toggleDarkMode()"
+	>
+		<i class='bx bxs-adjust'></i>
+	</button>
 	<div class = "game">
 		<div class = "header">
 			<h1><span id="letterChange" onclick="changeLetter(this)">Q</span>WERTLE</h1>
@@ -97,7 +106,7 @@
 	<p id = "credits">Made by Hazel Ball</p>
 
 	<!-- For Testing Purposes Only -->
-	<!-- <button onclick="localStorage.clear()">Clear Cache</button> -->
+	<button onclick="localStorage.clear()">Clear Cache</button>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.3.10/seedrandom.min.js"></script>
 	<script src = "script.js"></script>
